@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Nos réalisations" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900">{% trans "Nos réalisations" %}</h1>
+            <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                {% trans "Découvrez tous nos projets de forage, captage et aménagement à travers le Cameroun" %}
+            </p>
+            <div class="flex justify-center gap-4 mt-6">
+                <span class="px-4 py-2 bg-blue-100 text-brand-blue rounded-full">
+                    {{ stats.termines }} {% trans "projets terminés" %}
+                </span>
+                {% if stats.en_cours %}
+                <span class="px-4 py-2 bg-orange-100 text-orange-600 rounded-full">
+                    {{ stats.en_cours }} {% trans "en cours" %}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for realisation in realisations %}
+            <div class="group relative rounded-2xl overflow-hidden shadow-lg bg-white hover-scale">
+                <div class="aspect-[4/3] overflow-hidden">
+                    <img src="{{ realisation.image_principale.url }}" 
+                         alt="{{ realisation.titre }}" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                         loading="lazy">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">{{ realisation.titre }}</h3>
+                    <p class="text-gray-600 text-sm mb-2">
+                        <i class="fas fa-map-marker-alt text-brand-red mr-1"></i> {{ realisation.localisation }}
+                    </p>
+                    <p class="text-gray-600 text-sm mb-3">
+                        <i class="fas fa-calendar text-brand-blue mr-1"></i> {{ realisation.date_realisation|date:"d/m/Y" }}
+                    </p>
+                    <p class="text-gray-500">{{ realisation.description|truncatewords:20 }}</p>
+                </div>
+                <div class="absolute top-4 right-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold {% if realisation.statut == 'termine' %}bg-green-500 text-white{% else %}bg-orange-500 text-white{% endif %}">
+                        {{ realisation.get_statut_display }}
+                    </span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-3 text-center py-12">
+                <p class="text-gray-500">{% trans "Aucune réalisation pour le moment." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if is_paginated %}
+        <div class="flex justify-center mt-12">
+            <nav class="inline-flex rounded-md shadow">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border rounded-l-md hover:bg-gray-100">&laquo;</a>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <span class="px-4 py-2 border bg-brand-blue text-white">{{ num }}</span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}" class="px-4 py-2 border hover:bg-gray-100">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border rounded-r-md hover:bg-gray-100">&raquo;</a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+
+        <div class="text-center mt-12">
+            <a href="{% url 'home' %}#realisations" 
+               class="inline-flex items-center gap-3 bg-[#0052CC] hover:bg-[#0040a3] text-white font-semibold text-lg px-10 py-5 rounded-3xl transition-all shadow-lg active:scale-95">
+                <span>{% trans "retour à la liste" %}</span>
+                <i class="fa-solid fa-arrow-right transition-transform"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

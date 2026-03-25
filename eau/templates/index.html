@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block content %}
+<!-- Hero Section avec Slider -->
+<section id="accueil" class="relative min-h-[90vh] flex items-center overflow-hidden text-white">
+    <div id="hero-slider" class="absolute inset-0 z-0 overflow-hidden">
+        {% for media in medias|slice:":3" %}
+        <img src="{{ media.image.url }}" 
+             alt="{{ media.titre }}" 
+             class="slider-img {% if forloop.first %}active{% endif %} w-full h-full object-cover absolute inset-0">
+        {% endfor %}
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-900/70 to-transparent z-10"></div>
+    </div>
+    
+    <div class="container mx-auto px-6 relative z-20 py-20">
+        <div class="max-w-3xl fade-up">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-6">
+                {{ entreprise.slogan|default:"L'expertise du forage pour un avenir durable" }}
+            </h1>
+            <p class="text-lg md:text-2xl text-gray-200 mb-10 max-w-2xl leading-relaxed">
+                {{ entreprise.description|truncatewords:20 }}
+            </p>
+            <div class="flex flex-wrap gap-5">
+                <a href="#devis" class="bg-brand-red hover:bg-red-700 text-white font-bold py-4 px-10 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 flex items-center gap-3">
+                    <i class="fas fa-file-invoice"></i> {% trans "Obtenir un devis gratuit" %}
+                </a>
+                <a href="#services" class="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-semibold py-4 px-10 rounded-full transition-all flex items-center gap-3">
+                    {% trans "Découvrir nos solutions" %}
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-gray-50 to-transparent z-20"></div>
+</section>
+
+<!-- Section À Propos -->
+<section id="propos" class="py-20 bg-white overflow-hidden">
+    <div class="container mx-auto px-5">
+        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            <div class="flex-1 relative fade-up">
+                <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
+                    {% if medias %}
+                        {% for media in medias %}
+                            {% if media.type == 'equipe' %}
+                                {% if forloop.first or not found_equipe %}
+                                    <img src="{{ media.image.url }}" alt="{{ media.titre }}" class="w-full h-auto object-cover rounded-2xl shadow-lg">
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-brand-red/10 rounded-full -z-10"></div>
+                    <div class="absolute -top-6 -left-6 w-48 h-48 bg-brand-blue/5 rounded-2xl -z-10"></div>
+                </div>
+                <div class="absolute bottom-10 -left-15 bg-white p-6 rounded-xl shadow-xl z-20 hidden md:block border-l-4 border-brand-blue">
+                    <p class="text-3xl font-black text-brand-blue">{{ entreprise.annees_experience }}+</p>
+                    <p class="text-sm font-bold text-gray-600 uppercase tracking-wider">{% trans "Ans d'Expertise" %}</p>
+                </div>
+            </div>
+            
+            <div class="flex-1 fade-up">
+                <span class="text-brand-red font-bold tracking-widest uppercase text-sm mb-3 block">{% trans "Qui sommes-nous ?" %}</span>
+                <h2 class="text-3xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">
+                    {% trans "L'eau, une ressource vitale que nous rendons accessible à tous." %}
+                </h2>
+                <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                    {% trans "Basée à Douala, Eau Pour Tous SARL est une entreprise citoyenne spécialisée dans l'hydraulique et le génie civil. Notre mission dépasse le simple forage : nous concevons des systèmes durables pour transformer le quotidien des populations et booster la productivité agricole au Cameroun." %}
+                    {{ entreprise.description }}
+                </p>
+                
+                <div class="space-y-4 mb-10">
+                    {% for valeur in valeurs|slice:":2" %}
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                            <i class="{{ valeur.icone }} text-brand-blue"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">{{ valeur.titre }}</h4>
+                            <p class="text-sm text-gray-500">{{ valeur.description }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <a href="#services" class="inline-flex items-center gap-2 text-brand-blue font-bold hover:gap-4 transition-all">
+                    {% trans "En savoir plus sur nos valeurs" %} <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% if documents %}
+<section id="certifications" class="py-24 bg-gray-50/50">
+    <div class="container mx-auto px-6">
+        
+        <div class="max-w-3xl mb-16 fade-up">
+            <h2 class="text-brand-red font-bold uppercase tracking-widest text-sm mb-3">
+                {% trans "Transparence & Conformité" %}
+            </h2>
+            <h3 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight">
+                Nos garanties <span class="text-brand-blue">légales et techniques</span>
+            </h3>
+            <div class="w-20 h-1.5 bg-brand-red mt-6 rounded-full"></div>
+            <p class="text-gray-600 mt-6 text-lg">
+                Consultez nos agréments fiscaux, certifications professionnelles et documents administratifs qui attestent de notre expertise au Cameroun.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {% for doc in documents %}
+            <div class="group bg-white rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 flex flex-col h-full fade-up">
+                
+                <div class="relative h-80 bg-gray-200 overflow-hidden p-6 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/5"></div>
+                    
+                    {% if doc.fichier %}
+                        <img src="{{ doc.fichier.url }}" alt="{{ doc.titre }}" 
+                             class="max-w-full max-h-full object-contain shadow-md rounded-sm transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1">
+                        
+                        <div class="absolute inset-0 bg-brand-blue/90 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-6 text-center">
+                            <a href="{{ doc.fichier.url }}" target="_blank" class="bg-white text-brand-blue w-16 h-16 rounded-full flex items-center justify-center shadow-2xl mb-4 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                <i class="fas fa-expand-alt text-2xl"></i>
+                            </a>
+                            <p class="text-white font-bold text-sm">{% trans "Agrandir le document" %}</p>
+                        </div>
+                    {% else %}
+                        <div class="text-center text-gray-400">
+                            <i class="fas fa-file-invoice text-6xl mb-4"></i>
+                            <p class="text-xs font-bold uppercase tracking-tighter">{% trans "Fichier non trouvé" %}</p>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="absolute top-6 left-6">
+                        <span class="bg-white/95 backdrop-blur-md text-brand-blue text-[11px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg border border-gray-200">
+                            {{ doc.get_type_display }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="p-8 flex flex-col flex-grow">
+                    <h4 class="font-extrabold text-gray-900 text-xl mb-3 group-hover:text-brand-blue transition-colors">
+                        {{ doc.titre }}
+                    </h4>
+                    
+                    
+                    
+            
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Section Services -->
+<section id="services" class="py-16 md:py-24 bg-gray-50">
+    <div class="container mx-auto px-5">
+        <div class="text-center mb-12 fade-up">
+            <span class="text-brand-red font-semibold tracking-wide uppercase text-sm bg-red-100 px-4 py-1 rounded-full">{% trans "Nos prestations" %}</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mt-3">{% trans "Solutions complètes" %} <span class="text-brand-blue">{% trans "eau & génie civil" %}</span></h2>
+            <div class="w-24 h-1 bg-brand-red mx-auto mt-4 rounded-full"></div>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
+            {% for service in services %}
+            <div class="bg-white rounded-2xl p-6 card-shadow hover-scale transition fade-up">
+                <i class="{{ service.icone }} fa-2x text-brand-blue mb-4"></i>
+                <h3 class="text-xl font-bold mb-2">{{ service.titre }}</h3>
+                <p class="text-gray-600">{{ service.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Section Pourquoi Nous Choisir -->
+<section class="py-16 md:py-20 bg-white">
+    <div class="container mx-auto px-5">
+        <div class="text-center mb-10 fade-up">
+            <h2 class="text-3xl font-bold text-gray-800">{% trans "Pourquoi" %} <span class="text-brand-blue">{% trans "Eau pour tous" %}</span> ?</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 text-center">
+            {% for valeur in valeurs %}
+            <div class="p-5 fade-up">
+                <i class="{{ valeur.icone }} text-4xl text-brand-red mb-3"></i>
+                <h3 class="font-bold text-lg">{{ valeur.titre }}</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Section Réalisations -->
+<section id="realisations" class="py-20 md:py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <span class="inline-block px-5 py-2 bg-[#0052CC]/10 text-[#0052CC] font-semibold rounded-full text-sm uppercase tracking-wider mb-4">
+                {% trans "Nos chantiers" %}
+            </span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+                {% trans "Nos" %} <span class="text-[#E30613]">{% trans "réalisations" %}</span> {% trans "récentes" %}
+            </h2>
+            <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                {% trans "Découvrez quelques-uns de nos projets de forage, captage, irrigation et aménagement réalisés partout au Cameroun." %}
+            </p>
+        </div>
+        
+        <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for realisation in realisations %}
+            <div class="project-card group relative rounded-2xl overflow-hidden shadow-lg bg-white fade-in">
+                <div class="aspect-[4/3] overflow-hidden">
+                    <img src="{{ realisation.image_principale.url }}" 
+                         alt="{{ realisation.titre }}" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                         loading="lazy">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
+                    <h3 class="text-white text-xl font-bold">{{ realisation.titre }}</h3>
+                    <p class="text-white/90 text-sm mt-1">{{ realisation.localisation }} ({{ realisation.date_realisation|date:"Y" }})</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if realisations.count >= 6 %}
+        <div class="text-center mt-12">
+            <a href="{% url 'realisations' %}" 
+               class="inline-flex items-center gap-3 bg-[#0052CC] hover:bg-[#0040a3] text-white font-semibold text-lg px-10 py-5 rounded-3xl transition-all shadow-lg active:scale-95">
+                <span>{% trans "Voir plus de réalisations" %}</span>
+                <i class="fa-solid fa-arrow-right transition-transform"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Section Avis Clients -->
+{% if avis %}
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-5">
+        <div class="text-center mb-12 fade-up">
+            <h2 class="text-3xl font-bold text-gray-800">{% trans "Ce que disent nos clients" %}</h2>
+            <div class="w-24 h-1 bg-brand-red mx-auto mt-4 rounded-full"></div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for avis_item in avis %}
+            <div class="bg-gray-50 rounded-2xl p-6 shadow-md fade-up">
+                <div class="flex items-center gap-2 mb-4">
+                    {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= avis_item.note %}
+                            <i class="fas fa-star text-yellow-400"></i>
+                        {% else %}
+                            <i class="far fa-star text-yellow-400"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p class="text-gray-600 mb-4">"{{ avis_item.message|truncatewords:30 }}"</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white font-bold">
+                        {{ avis_item.nom|slice:":1"|upper }}
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-800">{{ avis_item.nom }}</p>
+                        <p class="text-xs text-gray-500">{{ avis_item.date|date:"d/m/Y" }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Section Contact -->
+<section id="contact" class="py-16 md:py-20 bg-gray-50">
+    <div class="container mx-auto px-5 max-w-6xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <div class="fade-up">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">{% trans "Parlons de votre projet" %}</h2>
+                <div class="bg-white p-6 rounded-2xl shadow-md">
+                    <div class="flex items-center gap-4 mb-4">
+                        <i class="fas fa-map-marker-alt text-brand-red text-xl"></i>
+                        <span>{{ entreprise.adresse }}</span>
+                    </div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <i class="fas fa-phone-alt text-brand-red text-xl"></i>
+                        <span>{{ entreprise.telephone }}</span>
+                    </div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <i class="fas fa-envelope text-brand-red text-xl"></i>
+                        <span>{{ entreprise.email }}</span>
+                    </div>
+                    <div class="mt-8">
+                        <a href="https://wa.me/{{ entreprise.whatsapp|cut:'+'|cut:' ' }}?text={% filter urlencode %}{% trans "Bonjour Eau Pour Tous SARL, je vous contacte depuis votre site web. Je souhaiterais obtenir un devis express pour un projet de forage. Merci !" %}{% endfilter %}" 
+                        target="_blank" 
+                        class="bg-green-600 text-white px-6 py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-green-700 transition">
+                            <i class="fab fa-whatsapp"></i> {% trans "Contact WhatsApp" %}
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div id="devis" class="bg-white p-6 md:p-8 rounded-2xl shadow-md fade-up">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">{% trans "Demander un devis" %}</h3>
+                <form action="{% url 'contact' %}" method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    
+                    <div>{{ contact_form.nom }}</div>
+                    <div>{{ contact_form.email }}</div>
+                    
+                    <div>{{ contact_form.telephone }}</div>
+                    <div>{{ contact_form.message }}</div>
+
+                    <button type="submit" class="w-full bg-brand-blue hover:bg-blue-800 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:-translate-y-1">
+                        {% trans "Envoyer ma demande" %}
+                    </button>
+                </form>
+
+                {% if messages %}
+                <div class="mt-6 space-y-3">
+                    {% for message in messages %}
+                    <div class="p-4 rounded-xl flex items-center gap-3 animate-fade-in 
+                        {% if message.tags == 'success' %} bg-green-100 text-green-700 border border-green-200 
+                        {% else %} bg-red-100 text-red-700 border border-red-200 {% endif %}">
+                        
+                        {% if message.tags == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% else %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% endif %}
+                        
+                        <span class="text-sm font-semibold">{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

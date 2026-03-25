@@ -1,0 +1,114 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env
+
+
+# =========================
+# PYTHON
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environnements virtuels
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================
+# DJANGO
+# =========================
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Media uploads (optionnel selon ton choix)
+media/
+
+# Static files collectés
+staticfiles/
+
+# =========================
+# ENV VARIABLES
+# =========================
+.env
+.env.*
+
+# =========================
+# IDE / EDITORS
+# =========================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# =========================
+# OS FILES
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# TEST / COVERAGE
+# =========================
+.coverage
+htmlcov/
+.pytest_cache/
+
+# =========================
+# NODE / TAILWIND (si utilisé)
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+pnpm-lock.yaml
+
+# Build Tailwind
+dist/
+build/
+
+
+
+# =========================
+# CACHE
+# =========================
+*.cache
+*.pid
+
+# =========================
+# FILES GENERATED
+# =========================
+*.pot
+*.mo
+*.pyc
+
+# =========================
+# SECURITY
+# =========================
+*.pem
+*.key
+
+# =========================
+# DOCKER (si utilisé)
+# =========================
+docker-compose.override.yml
+
+# =========================
+# LOGS
+# =========================
+logs/
+*.log

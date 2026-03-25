@@ -1,0 +1,39 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="{% block meta_description %}{{ entreprise.description|truncatewords:30 }}{% endblock %}">
+    <meta name="keywords" content="forage Cameroun, géophysique Douala, puits aménagés, irrigation, captage eau">
+    <meta name="author" content="{{ entreprise.nom }}">
+    <meta name="theme-color" content="#1E3A8A">
+    
+    {% block seo %}{% endblock %}
+    
+    <title>{% block title %}{{ entreprise.nom }} | {{ entreprise.slogan }}{% endblock %}</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-white text-gray-800">
+    
+    {% include 'includes/navbar.html' %}
+    
+    <main class="pt-20">
+        {% block content %}{% endblock %}
+    </main>
+    
+    {% include 'includes/footer.html' %}
+    
+    
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+    
+    
+</body>
+</html>

@@ -1,0 +1,148 @@
+/* --- CONFIGURATION GÉNÉRALE --- */
+* {
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+}
+
+/* Couleurs de marque */
+:root {
+    --brand-blue: #1E3A8A;
+    --brand-red: #DC2626;
+    --brand-red-dark: #B91C1C;
+}
+
+.text-brand-blue { color: var(--brand-blue); }
+.bg-brand-blue { background-color: var(--brand-blue); }
+.text-brand-red { color: var(--brand-red); }
+.bg-brand-red { background-color: var(--brand-red); }
+.hover\:bg-brand-red-dark:hover { background-color: var(--brand-red-dark); }
+
+/* --- SECTIONS SPÉCIFIQUES --- */
+.hero-gradient {
+    background: linear-gradient(135deg, #0f2b5e 0%, #153e7a 100%);
+}
+
+.card-shadow {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+}
+
+/* --- ANIMATIONS & INTERACTIONS --- */
+.fade-up {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s ease;
+}
+
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hover-scale {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 25px -12px rgba(0,0,0,0.15);
+}
+
+/* Hamburger Menu Animation */
+.menu-open .hamburger-line:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.menu-open .hamburger-line:nth-child(2) { opacity: 0; }
+.menu-open .hamburger-line:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+.hamburger-line { transition: all 0.25s ease; }
+
+/* WhatsApp Button */
+.whatsapp-float {
+    transition: transform 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.08);
+    background-color: #075e54;
+}
+
+/* --- ÉLÉMENTS FORMULAIRE --- */
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #D1D5DB;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.form-input:focus {
+    border-color: var(--brand-red);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+/* Hero Slider */
+#hero-slider .slider-img {
+    opacity: 0;
+    transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+#hero-slider .slider-img.active {
+    opacity: 0.6;
+    z-index: 2;
+}
+
+#hero-slider div[class*="bg-gradient-to-r"] {
+    z-index: 5;
+}
+
+/* Animation slide-in pour les messages */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+#navbar {
+    height: 80px;
+
+}
+
+/* Animation de rotation pour l'icône du menu */
+.rotate-icon {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* On s'assure que l'icône a une taille fixe pour éviter les sauts de mise en page */
+#menuBtn i {
+    width: 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* Animation d'entrée du menu mobile */
+#mobileMenu {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#mobileMenu:not(.hidden) {
+    display: flex;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
