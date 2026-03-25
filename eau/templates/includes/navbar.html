@@ -14,9 +14,10 @@
                 <span class="font-extrabold text-lg lg:text-xl tracking-tight leading-none">
                     <span class="text-brand-blue">EAU</span> 
                     <span class="text-brand-blue">POUR TOUS</span> 
-                    <span class="text-brand-red ">SARL</span>
                 </span>
+              
             </a>
+           
         </div>
 
         <nav class="hidden md:flex items-center space-x-4 lg:space-x-8">
@@ -49,18 +50,26 @@
             </a>
         </nav>
 
-        <div class="flex items-center gap-4 md:hidden">
-            <form action="{% url 'set_language' %}" method="post" class="text-xs font-bold">
+        <div class="flex items-center gap-2 md:hidden">
+            <form action="{% url 'set_language' %}" method="post" class="relative flex items-center group">
                 {% csrf_token %}
-                <select name="language" onchange="this.form.submit()" class="bg-gray-100 rounded px-2 py-1">
+                <i class="fas fa-globe text-brand-blue text-sm mr-1"></i>
+                
+                <select name="language" onchange="this.form.submit()" 
+                        class="appearance-none bg-transparent text-xs font-black text-gray-800 cursor-pointer focus:outline-none pr-1 uppercase tracking-tighter">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
                     {% for lang in LANGUAGES %}
-                        <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>{{ lang.0|upper }}</option>
+                        <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>
+                            {{ lang.0 }}
+                        </option>
                     {% endfor %}
                 </select>
+                
             </form>
 
-            <button id="menuBtn" class="text-gray-800 focus:outline-none p-2">
-                <i class="fas fa-bars text-2xl"></i> </button>
+            <button id="menuBtn" class="text-gray-800 focus:outline-none p-2 ml-2">
+                <i class="fas fa-bars text-2xl"></i>
             </button>
         </div>
     </div>

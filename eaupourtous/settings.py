@@ -27,6 +27,9 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1').split(',')
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://miquel-unlitigated-carmen.ngrok-free.dev"
+]
 
 # Application definition
 

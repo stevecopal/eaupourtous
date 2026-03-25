@@ -1,0 +1,402 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Eau pour tous SARL\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-25 16:10+0100\n"
+"PO-Revision-Date: 2026-03-25 16:10+0100\n"
+"Last-Translator: Steve <steve@eaupourtous.cm>\n"
+"Language-Team: French <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: eau/forms.py:12
+msgid "Nom complet"
+msgstr "Nom complet"
+
+#: eau/forms.py:20
+msgid "Adresse Email"
+msgstr "Adresse Email"
+
+#: eau/forms.py:30 eau/models.py:15
+msgid "Téléphone"
+msgstr "Téléphone"
+
+#: eau/forms.py:39
+msgid "Comment pouvons-nous vous aider ? Décrivez votre projet..."
+msgstr "Comment pouvons-nous vous aider ? Décrivez votre projet..."
+
+#: eau/models.py:11 eau/models.py:96
+msgid "Nom"
+msgstr "Nom"
+
+#: eau/models.py:12
+msgid "Slogan"
+msgstr "Slogan"
+
+#: eau/models.py:13
+msgid "Logo"
+msgstr "Logo"
+
+#: eau/models.py:14
+msgid "Email"
+msgstr "Email"
+
+#: eau/models.py:16
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: eau/models.py:17
+msgid "Adresse"
+msgstr "Adresse"
+
+#: eau/models.py:18 eau/models.py:40 eau/models.py:57 eau/models.py:78
+#: eau/models.py:121 eau/models.py:136
+msgid "Description"
+msgstr "Description"
+
+#: eau/models.py:19
+msgid "Zone d'intervention"
+msgstr "Zone d'intervention"
+
+#: eau/models.py:20
+msgid "Site web"
+msgstr "Site web"
+
+#: eau/models.py:21
+msgid "Années d'expérience"
+msgstr "Années d'expérience"
+
+#: eau/models.py:24
+msgid "Entreprise"
+msgstr "Entreprise"
+
+#: eau/models.py:25
+msgid "Entreprises"
+msgstr "Entreprises"
+
+#: eau/models.py:39 eau/models.py:56 eau/models.py:77 eau/models.py:120
+#: eau/models.py:135
+msgid "Titre"
+msgstr "Titre"
+
+#: eau/models.py:41
+msgid "Fichier"
+msgstr "Fichier"
+
+#: eau/models.py:42 eau/models.py:122
+msgid "Type"
+msgstr "Type"
+
+#: eau/models.py:43 eau/models.py:123
+msgid "Date d'ajout"
+msgstr "Date d'ajout"
+
+#: eau/models.py:44 eau/models.py:60
+msgid "Actif"
+msgstr "Actif"
+
+#: eau/models.py:47
+msgid "Document"
+msgstr "Document"
+
+#: eau/models.py:48
+msgid "Documents"
+msgstr "Documents"
+
+#: eau/models.py:58 eau/models.py:137
+msgid "Icône (FontAwesome)"
+msgstr "Icône (FontAwesome)"
+
+#: eau/models.py:59 eau/models.py:138
+msgid "Ordre"
+msgstr "Ordre"
+
+#: eau/models.py:63
+msgid "Service"
+msgstr "Service"
+
+#: eau/models.py:64 eau/templates/includes/navbar.html:27
+#: eau/templates/includes/navbar.html:81
+msgid "Services"
+msgstr "Services"
+
+#: eau/models.py:79
+msgid "Image principale"
+msgstr "Image principale"
+
+#: eau/models.py:80
+msgid "Galerie"
+msgstr "Galerie"
+
+#: eau/models.py:81
+msgid "Statut"
+msgstr "Statut"
+
+#: eau/models.py:82
+msgid "Date de réalisation"
+msgstr "Date de réalisation"
+
+#: eau/models.py:83
+msgid "Localisation"
+msgstr "Localisation"
+
+#: eau/models.py:84
+msgid "Mise en avant"
+msgstr "Mise en avant"
+
+#: eau/models.py:87
+msgid "Réalisation"
+msgstr "Réalisation"
+
+#: eau/models.py:88 eau/templates/includes/navbar.html:28
+#: eau/templates/includes/navbar.html:82
+msgid "Réalisations"
+msgstr "Réalisations"
+
+#: eau/models.py:97
+msgid "Message"
+msgstr "Message"
+
+#: eau/models.py:98
+msgid "Note"
+msgstr "Note"
+
+#: eau/models.py:99
+msgid "Date"
+msgstr "Date"
+
+#: eau/models.py:100
+msgid "Publié"
+msgstr "Publié"
+
+#: eau/models.py:103 eau/models.py:104
+msgid "Avis"
+msgstr "Avis"
+
+#: eau/models.py:119
+msgid "Image"
+msgstr "Image"
+
+#: eau/models.py:126
+msgid "Média"
+msgstr "Média"
+
+#: eau/models.py:127
+msgid "Médias"
+msgstr "Médias"
+
+#: eau/models.py:141
+msgid "Valeur"
+msgstr "Valeur"
+
+#: eau/models.py:142
+msgid "Valeurs"
+msgstr "Valeurs"
+
+#: eau/templates/404.html:4 eau/templates/404.html:11
+msgid "Page non trouvée"
+msgstr "Page non trouvée"
+
+#: eau/templates/404.html:14
+msgid "Désolé, la page que vous recherchez n'existe pas ou a été déplacée."
+msgstr "Désolé, la page que vous recherchez n'existe pas ou a été déplacée."
+
+#: eau/templates/404.html:17
+msgid "Retour à l'accueil"
+msgstr "Retour à l'accueil"
+
+#: eau/templates/includes/footer.html:4
+msgid "Copyright© 2026 Eau pour tous SARL - Tous droits réservés."
+msgstr "Copyright © 2026 Eau pour tous SARL - Tous droits réservés."
+
+#: eau/templates/includes/footer.html:5
+msgid "par Mr Copal"
+msgstr "par Mr Copal"
+
+#: eau/templates/includes/navbar.html:25 eau/templates/includes/navbar.html:79
+msgid "Accueil"
+msgstr "Accueil"
+
+#: eau/templates/includes/navbar.html:26 eau/templates/includes/navbar.html:80
+msgid "À Propos"
+msgstr "À Propos"
+
+#: eau/templates/includes/navbar.html:29 eau/templates/includes/navbar.html:83
+msgid "Contact"
+msgstr "Contact"
+
+#: eau/templates/includes/navbar.html:45 eau/templates/includes/navbar.html:84
+#: eau/templates/index.html:299
+msgid ""
+"Bonjour Eau Pour Tous SARL, je vous contacte depuis votre site web. Je "
+"souhaiterais obtenir un devis express pour un projet de forage. Merci !"
+msgstr ""
+"Bonjour Eau Pour Tous SARL, je vous contacte depuis votre site web. Je "
+"souhaiterais obtenir un devis express pour un projet de forage. Merci !"
+
+#: eau/templates/includes/navbar.html:49 eau/templates/includes/navbar.html:88
+msgid "Devis Express"
+msgstr "Devis Express"
+
+#: eau/templates/index.html:26
+msgid "Obtenir un devis gratuit"
+msgstr "Obtenir un devis gratuit"
+
+#: eau/templates/index.html:29
+msgid "Découvrir nos solutions"
+msgstr "Découvrir nos solutions"
+
+#: eau/templates/index.html:58
+msgid "Ans d'Expertise"
+msgstr "Ans d'Expertise"
+
+#: eau/templates/index.html:63
+msgid "Qui sommes-nous ?"
+msgstr "Qui sommes-nous ?"
+
+#: eau/templates/index.html:65
+msgid "L'eau, une ressource vitale que nous rendons accessible à tous."
+msgstr "L'eau, une ressource vitale que nous rendons accessible à tous."
+
+#: eau/templates/index.html:68
+msgid ""
+"Basée à Douala, Eau Pour Tous SARL est une entreprise citoyenne spécialisée "
+"dans l'hydraulique et le génie civil. Notre mission dépasse le simple "
+"forage : nous concevons des systèmes durables pour transformer le quotidien "
+"des populations et booster la productivité agricole au Cameroun."
+msgstr ""
+"Basée à Douala, Eau Pour Tous SARL est une entreprise citoyenne spécialisée "
+"dans l'hydraulique et le génie civil. Notre mission dépasse le simple "
+"forage : nous concevons des systèmes durables pour transformer le quotidien "
+"des populations et booster la productivité agricole au Cameroun."
+
+#: eau/templates/index.html:87
+msgid "En savoir plus sur nos valeurs"
+msgstr "En savoir plus sur nos valeurs"
+
+#: eau/templates/index.html:101
+msgid "Transparence & Conformité"
+msgstr "Transparence & Conformité"
+
+#: eau/templates/index.html:127
+msgid "Agrandir le document"
+msgstr "Agrandir le document"
+
+#: eau/templates/index.html:132
+msgid "Fichier non trouvé"
+msgstr "Fichier non trouvé"
+
+#: eau/templates/index.html:163
+msgid "Nos prestations"
+msgstr "Nos prestations"
+
+#: eau/templates/index.html:164
+msgid "Solutions complètes"
+msgstr "Solutions complètes"
+
+#: eau/templates/index.html:164
+msgid "eau & génie civil"
+msgstr "eau & génie civil"
+
+#: eau/templates/index.html:184
+msgid "Pourquoi"
+msgstr "Pourquoi"
+
+#: eau/templates/index.html:184
+msgid "Eau pour tous"
+msgstr "Eau pour tous"
+
+#: eau/templates/index.html:202
+msgid "Nos chantiers"
+msgstr "Nos chantiers"
+
+#: eau/templates/index.html:205
+msgid "Nos"
+msgstr "Nos"
+
+#: eau/templates/index.html:205
+msgid "réalisations"
+msgstr "réalisations"
+
+#: eau/templates/index.html:205
+msgid "récentes"
+msgstr "récentes"
+
+#: eau/templates/index.html:208
+msgid ""
+"Découvrez quelques-uns de nos projets de forage, captage, irrigation et "
+"aménagement réalisés partout au Cameroun."
+msgstr ""
+"Découvrez quelques-uns de nos projets de forage, captage, irrigation et "
+"aménagement réalisés partout au Cameroun."
+
+#: eau/templates/index.html:233
+msgid "Voir plus de réalisations"
+msgstr "Voir plus de réalisations"
+
+#: eau/templates/index.html:246
+msgid "Ce que disent nos clients"
+msgstr "Ce que disent nos clients"
+
+#: eau/templates/index.html:284
+msgid "Parlons de votre projet"
+msgstr "Parlons de votre projet"
+
+#: eau/templates/index.html:302
+msgid "Contact WhatsApp"
+msgstr "Contact WhatsApp"
+
+#: eau/templates/index.html:310
+msgid "Demander un devis"
+msgstr "Demander un devis"
+
+#: eau/templates/index.html:321
+msgid "Envoyer ma demande"
+msgstr "Envoyer ma demande"
+
+#: eau/templates/realisations/list.html:4
+#: eau/templates/realisations/list.html:10
+msgid "Nos réalisations"
+msgstr "Nos réalisations"
+
+#: eau/templates/realisations/list.html:12
+msgid ""
+"Découvrez tous nos projets de forage, captage et aménagement à travers le "
+"Cameroun"
+msgstr ""
+"Découvrez tous nos projets de forage, captage et aménagement à travers le "
+"Cameroun"
+
+#: eau/templates/realisations/list.html:16
+msgid "projets terminés"
+msgstr "projets terminés"
+
+#: eau/templates/realisations/list.html:20
+msgid "en cours"
+msgstr "en cours"
+
+#: eau/templates/realisations/list.html:53
+msgid "Aucune réalisation pour le moment."
+msgstr "Aucune réalisation pour le moment."
+
+#: eau/templates/realisations/list.html:83
+msgid "retour à la liste"
+msgstr "retour à la liste"
+
+#: eau/views.py:138
+msgid ""
+"Votre message a été transmis avec succès ! Nos équipes vous recontacteront."
+msgstr ""
+"Votre message a été transmis avec succès ! Nos équipes vous recontacteront."
+
+#: eau/views.py:141
+msgid "Erreur lors de l'envoi. Veuillez nous contacter via WhatsApp."
+msgstr "Erreur lors de l'envoi. Veuillez nous contacter via WhatsApp."
