@@ -16,7 +16,7 @@
     <div class="container mx-auto px-6 relative z-20 py-20">
         <div class="max-w-3xl fade-up">
             <h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-6">
-                {{ entreprise.slogan|default:"L'expertise du forage pour un avenir durable" }}
+                {{ entreprise.slogan|default:"" }}
             </h1>
             <p class="text-lg md:text-2xl text-gray-200 mb-10 max-w-2xl leading-relaxed">
                 {{ entreprise.description|truncatewords:20 }}
@@ -101,11 +101,11 @@
                 {% trans "Transparence & Conformité" %}
             </h2>
             <h3 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight">
-                Nos garanties <span class="text-brand-blue">légales et techniques</span>
+                {% trans "Nos garanties" %} <span class="text-brand-blue"> {% trans "légales et techniques" %}</span>
             </h3>
             <div class="w-20 h-1.5 bg-brand-red mt-6 rounded-full"></div>
             <p class="text-gray-600 mt-6 text-lg">
-                Consultez nos agréments fiscaux, certifications professionnelles et documents administratifs qui attestent de notre expertise au Cameroun.
+                {% trans "Consultez nos agréments fiscaux, certifications professionnelles et documents administratifs qui attestent de notre expertise au Cameroun." %}
             </p>
         </div>
 

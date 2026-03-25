@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-25 16:10+0100\n"
+"POT-Creation-Date: 2026-03-25 21:24+0100\n"
 "PO-Revision-Date: 2026-03-25 16:10+0100\n"
 "Last-Translator: Grok <grok@x.ai>\n"
 "Language-Team: English <LL@li.org>\n"
@@ -239,8 +239,8 @@ msgid ""
 "Bonjour Eau Pour Tous SARL, je vous contacte depuis votre site web. Je "
 "souhaiterais obtenir un devis express pour un projet de forage. Merci !"
 msgstr ""
-"Hello Eau Pour Tous SARL, I am contacting you from your website. I would like "
-"to get an express quote for a drilling project. Thank you!"
+"Hello Eau Pour Tous SARL, I am contacting you from your website. I would "
+"like to get an express quote for a drilling project. Thank you!"
 
 #: eau/templates/includes/navbar.html:49 eau/templates/includes/navbar.html:88
 msgid "Devis Express"
@@ -274,8 +274,8 @@ msgid ""
 "des populations et booster la productivité agricole au Cameroun."
 msgstr ""
 "Based in Douala, Eau Pour Tous SARL is a responsible company specializing in "
-"hydraulics and civil engineering. Our mission goes beyond simple drilling: we "
-"design sustainable systems to transform people's daily lives and boost "
+"hydraulics and civil engineering. Our mission goes beyond simple drilling: "
+"we design sustainable systems to transform people's daily lives and boost "
 "agricultural productivity in Cameroon."
 
 #: eau/templates/index.html:87
@@ -285,6 +285,22 @@ msgstr "Learn More About Our Values"
 #: eau/templates/index.html:101
 msgid "Transparence & Conformité"
 msgstr "Transparency & Compliance"
+
+#: eau/templates/index.html:104
+msgid "Nos garanties"
+msgstr "Our Guarantees"
+
+#: eau/templates/index.html:104
+msgid "légales et techniques"
+msgstr "legal and technical"
+
+#: eau/templates/index.html:108
+msgid ""
+"Consultez nos agréments fiscaux, certifications professionnelles et "
+"documents administratifs qui attestent de notre expertise au Cameroun."
+msgstr ""
+"Consult our tax approvals, professional certifications, and administrative "
+"documents attesting to our expertise in Cameroon."
 
 #: eau/templates/index.html:127
 msgid "Agrandir le document"
@@ -372,7 +388,8 @@ msgid ""
 "Découvrez tous nos projets de forage, captage et aménagement à travers le "
 "Cameroun"
 msgstr ""
-"Discover all our drilling, water catchment and development projects across Cameroon"
+"Discover all our drilling, water catchment and development projects across "
+"Cameroon"
 
 #: eau/templates/realisations/list.html:16
 msgid "projets terminés"

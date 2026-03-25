@@ -34,6 +34,7 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -153,3 +154,11 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@eaupourtous.cm')
+
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'fr'
+
+MODELTRANSLATION_FALLBACK_LANGUAGES = ('fr',)
+MODELTRANSLATION_CUSTOM_FIELDS = ('CharField', 'TextField')
+# Optionnel : pour avoir des onglets dans l'admin
+MODELTRANSLATION_ADMIN_THEME = 'suit' # Ou un autre thème si tu en utilises un

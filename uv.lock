@@ -51,6 +51,19 @@ wheels = [
 ]
 
 [[package]]
+name = "django-modeltranslation"
+version = "0.20.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/62/aa/3492ab6250e0c87e26f2f4fd522e4c9b214da871bfe4089a13888a802c6e/django_modeltranslation-0.20.2.tar.gz", hash = "sha256:d687bdcae9305dcdc8d644b75f1d687f355073e82049f4b9c4ba0feb347a0980", size = 81589, upload-time = "2026-03-01T15:59:07.262Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/79/46/6c1edcab4233baa02cc6cfaf43e01ccc0c28757f9450171e54d790512e21/django_modeltranslation-0.20.2-py3-none-any.whl", hash = "sha256:964385c3cf3a584f564e995f2e9ff0e961d0297ef04ff51821ac529e12064290", size = 98257, upload-time = "2026-03-01T15:59:06.09Z" },
+]
+
+[[package]]
 name = "eaupourtous"
 version = "0.1.0"
 source = { virtual = "." }
@@ -58,6 +71,7 @@ dependencies = [
     { name = "crispy-tailwind" },
     { name = "django" },
     { name = "django-crispy-forms" },
+    { name = "django-modeltranslation" },
     { name = "pillow" },
     { name = "psycopg2-binary" },
     { name = "python-decouple" },
@@ -68,6 +82,7 @@ requires-dist = [
     { name = "crispy-tailwind", specifier = ">=1.0.3" },
     { name = "django", specifier = ">=6.0.3" },
     { name = "django-crispy-forms", specifier = ">=2.6" },
+    { name = "django-modeltranslation", specifier = ">=0.20.2" },
     { name = "pillow", specifier = ">=12.1.1" },
     { name = "psycopg2-binary", specifier = ">=2.9.11" },
     { name = "python-decouple", specifier = ">=3.8" },
@@ -177,6 +192,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/90/76/437d71068094df0726366574cf3432a4ed754217b436eb7429415cf2d480/sqlparse-0.5.5.tar.gz", hash = "sha256:e20d4a9b0b8585fdf63b10d30066c7c94c5d7a7ec47c889a2d83a3caa93ff28e", size = 120815, upload-time = "2025-12-19T07:17:45.073Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/49/4b/359f28a903c13438ef59ebeee215fb25da53066db67b305c125f1c6d2a25/sqlparse-0.5.5-py3-none-any.whl", hash = "sha256:12a08b3bf3eec877c519589833aed092e2444e68240a3577e8e26148acc7b1ba", size = 46138, upload-time = "2025-12-19T07:17:46.573Z" },
+]
+
+[[package]]
+name = "typing-extensions"
+version = "4.15.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/72/94/1a15dd82efb362ac84269196e94cf00f187f7ed21c242792a923cdb1c61f/typing_extensions-4.15.0.tar.gz", hash = "sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466", size = 109391, upload-time = "2025-08-25T13:49:26.313Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl", hash = "sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548", size = 44614, upload-time = "2025-08-25T13:49:24.86Z" },
 ]
 
 [[package]]
