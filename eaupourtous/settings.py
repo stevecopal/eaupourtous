@@ -162,3 +162,9 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = ('fr',)
 MODELTRANSLATION_CUSTOM_FIELDS = ('CharField', 'TextField')
 # Optionnel : pour avoir des onglets dans l'admin
 MODELTRANSLATION_ADMIN_THEME = 'suit' # Ou un autre thème si tu en utilises un
+
+
+# Dans eaupourtous/settings.py
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True # Pour éviter les warnings Celery 6+

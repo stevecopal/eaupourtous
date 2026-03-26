@@ -16,6 +16,7 @@ from django.core.mail import send_mail
 from django.shortcuts import redirect
 
 from eau.forms import ContactForm
+from eau.tasks import send_contact_email_task
 
 from .models import (
     Entreprise, Service, Realisation, Avis, 
@@ -110,34 +111,14 @@ class ContactView(FormView):
         return reverse('home') + '#contact'
 
     def form_valid(self, form):
+        # On récupère les données propres
         data = form.cleaned_data
-        sujet = f"🚀 Nouveau Projet : {data['nom']}"
         
-        # 1. Préparation du contexte pour le template HTML
-        context = {
-            'nom': data['nom'],
-            'email': data['email'],
-            'telephone': data['telephone'],
-            'message': data['message'],
-        }
+        # On lance la tâche en arrière-plan (delay)
+        # On passe les données simples (dict) car Celery doit les sérialiser
+        send_contact_email_task.delay(data)
         
-        # 2. Rendu du template HTML en chaîne de caractères
-        html_message = render_to_string('emails/contact_email.html', context)
-        # 3. Version texte brut (pour les vieux clients mail qui ne lisent pas le HTML)
-        plain_message = strip_tags(html_message)
-        
-        try:
-            send_mail(
-                sujet,
-                plain_message,
-                settings.DEFAULT_FROM_EMAIL,
-                [settings.EMAIL_HOST_USER], # Ton mail de réception
-                html_message=html_message, # <--- Version pro ici
-                fail_silently=False,
-            )
-            messages.success(self.request, _("Votre message a été transmis avec succès ! Nos équipes vous recontacteront."))
-        except Exception as e:
-            print(f"DEBUG MAIL: {e}")
-            messages.error(self.request, _("Erreur lors de l'envoi. Veuillez nous contacter via WhatsApp."))
+        # Réponse instantanée pour l'utilisateur
+        messages.success(self.request, _("Votre demande est en cours de traitement. Un accusé de réception vous sera envoyé."))
         
         return super().form_valid(form)
