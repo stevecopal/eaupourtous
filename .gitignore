@@ -44,7 +44,6 @@ staticfiles/
 # ENV VARIABLES
 # =========================
 .env
-.env.*
 
 # =========================
 # IDE / EDITORS
