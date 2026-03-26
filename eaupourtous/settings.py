@@ -30,8 +30,12 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1').split(',')
 CSRF_TRUSTED_ORIGINS = [
     "https://miquel-unlitigated-carmen.ngrok-free.dev"
     "https://172.239.26.125",
-    "http://172.239.26.125"
+    "http://172.239.26.125",
+    'https://eaupourtoussarl.com', 
+    'https://www.eaupourtoussarl.com'
 ]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
