@@ -3,6 +3,7 @@
 
 
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
@@ -90,6 +91,10 @@ class Realisation(models.Model):
     
     def __str__(self):
         return self.titre
+    
+    def get_absolute_url(self):
+        # Remplace 'realisation_detail' par le 'name' de ton URL de détail
+        return reverse('realisations')
 
 class Avis(models.Model):
     """Modèle pour les avis clients"""

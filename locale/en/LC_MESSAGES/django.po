@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-25 21:24+0100\n"
+"POT-Creation-Date: 2026-03-27 07:59+0100\n"
 "PO-Revision-Date: 2026-03-25 16:10+0100\n"
 "Last-Translator: Grok <grok@x.ai>\n"
 "Language-Team: English <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr "Full Name"
 msgid "Adresse Email"
 msgstr "Email Address"
 
-#: eau/forms.py:30 eau/models.py:15
+#: eau/forms.py:30 eau/models.py:16
 msgid "Téléphone"
 msgstr "Phone"
 
@@ -33,171 +33,172 @@ msgstr "Phone"
 msgid "Comment pouvons-nous vous aider ? Décrivez votre projet..."
 msgstr "How can we help you? Please describe your project..."
 
-#: eau/models.py:11 eau/models.py:96
+#: eau/models.py:12 eau/models.py:101
 msgid "Nom"
 msgstr "Name"
 
-#: eau/models.py:12
+#: eau/models.py:13
 msgid "Slogan"
 msgstr "Slogan"
 
-#: eau/models.py:13
+#: eau/models.py:14
 msgid "Logo"
 msgstr "Logo"
 
-#: eau/models.py:14
+#: eau/models.py:15
 msgid "Email"
 msgstr "Email"
 
-#: eau/models.py:16
+#: eau/models.py:17
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
-#: eau/models.py:17
+#: eau/models.py:18
 msgid "Adresse"
 msgstr "Address"
 
-#: eau/models.py:18 eau/models.py:40 eau/models.py:57 eau/models.py:78
-#: eau/models.py:121 eau/models.py:136
+#: eau/models.py:19 eau/models.py:41 eau/models.py:58 eau/models.py:79
+#: eau/models.py:126 eau/models.py:141
 msgid "Description"
 msgstr "Description"
 
-#: eau/models.py:19
+#: eau/models.py:20
 msgid "Zone d'intervention"
 msgstr "Area of Intervention"
 
-#: eau/models.py:20
+#: eau/models.py:21
 msgid "Site web"
 msgstr "Website"
 
-#: eau/models.py:21
+#: eau/models.py:22
 msgid "Années d'expérience"
 msgstr "Years of Experience"
 
-#: eau/models.py:24
+#: eau/models.py:25
 msgid "Entreprise"
 msgstr "Company"
 
-#: eau/models.py:25
+#: eau/models.py:26
 msgid "Entreprises"
 msgstr "Companies"
 
-#: eau/models.py:39 eau/models.py:56 eau/models.py:77 eau/models.py:120
-#: eau/models.py:135
+#: eau/models.py:40 eau/models.py:57 eau/models.py:78 eau/models.py:125
+#: eau/models.py:140
 msgid "Titre"
 msgstr "Title"
 
-#: eau/models.py:41
+#: eau/models.py:42
 msgid "Fichier"
 msgstr "File"
 
-#: eau/models.py:42 eau/models.py:122
+#: eau/models.py:43 eau/models.py:127
 msgid "Type"
 msgstr "Type"
 
-#: eau/models.py:43 eau/models.py:123
+#: eau/models.py:44 eau/models.py:128
 msgid "Date d'ajout"
 msgstr "Date Added"
 
-#: eau/models.py:44 eau/models.py:60
+#: eau/models.py:45 eau/models.py:61
 msgid "Actif"
 msgstr "Active"
 
-#: eau/models.py:47
+#: eau/models.py:48
 msgid "Document"
 msgstr "Document"
 
-#: eau/models.py:48
+#: eau/models.py:49
 msgid "Documents"
 msgstr "Documents"
 
-#: eau/models.py:58 eau/models.py:137
+#: eau/models.py:59 eau/models.py:142
 msgid "Icône (FontAwesome)"
 msgstr "Icon (FontAwesome)"
 
-#: eau/models.py:59 eau/models.py:138
+#: eau/models.py:60 eau/models.py:143
 msgid "Ordre"
 msgstr "Order"
 
-#: eau/models.py:63
+#: eau/models.py:64
 msgid "Service"
 msgstr "Service"
 
-#: eau/models.py:64 eau/templates/includes/navbar.html:27
+#: eau/models.py:65 eau/templates/includes/navbar.html:27
 #: eau/templates/includes/navbar.html:81
 msgid "Services"
 msgstr "Services"
 
-#: eau/models.py:79
+#: eau/models.py:80
 msgid "Image principale"
 msgstr "Main Image"
 
-#: eau/models.py:80
+#: eau/models.py:81
 msgid "Galerie"
 msgstr "Gallery"
 
-#: eau/models.py:81
+#: eau/models.py:82
 msgid "Statut"
 msgstr "Status"
 
-#: eau/models.py:82
+#: eau/models.py:83
 msgid "Date de réalisation"
 msgstr "Completion Date"
 
-#: eau/models.py:83
+#: eau/models.py:84 eau/templates/realisations/realisation_detail.html:80
 msgid "Localisation"
 msgstr "Location"
 
-#: eau/models.py:84
+#: eau/models.py:85
 msgid "Mise en avant"
 msgstr "Featured"
 
-#: eau/models.py:87
+#: eau/models.py:88
 msgid "Réalisation"
 msgstr "Project"
 
-#: eau/models.py:88 eau/templates/includes/navbar.html:28
+#: eau/models.py:89 eau/templates/includes/navbar.html:28
 #: eau/templates/includes/navbar.html:82
+#: eau/templates/realisations/realisation_detail.html:12
 msgid "Réalisations"
 msgstr "Our Projects"
 
-#: eau/models.py:97
+#: eau/models.py:102
 msgid "Message"
 msgstr "Message"
 
-#: eau/models.py:98
+#: eau/models.py:103
 msgid "Note"
 msgstr "Rating"
 
-#: eau/models.py:99
+#: eau/models.py:104
 msgid "Date"
 msgstr "Date"
 
-#: eau/models.py:100
+#: eau/models.py:105
 msgid "Publié"
 msgstr "Published"
 
-#: eau/models.py:103 eau/models.py:104
+#: eau/models.py:108 eau/models.py:109
 msgid "Avis"
 msgstr "Testimonials"
 
-#: eau/models.py:119
+#: eau/models.py:124
 msgid "Image"
 msgstr "Image"
 
-#: eau/models.py:126
+#: eau/models.py:131
 msgid "Média"
 msgstr "Media"
 
-#: eau/models.py:127
+#: eau/models.py:132
 msgid "Médias"
 msgstr "Media"
 
-#: eau/models.py:141
+#: eau/models.py:146
 msgid "Valeur"
 msgstr "Value"
 
-#: eau/models.py:142
+#: eau/models.py:147
 msgid "Valeurs"
 msgstr "Our Values"
 
@@ -213,15 +214,20 @@ msgstr "Sorry, the page you are looking for does not exist or has been moved."
 msgid "Retour à l'accueil"
 msgstr "Back to Home"
 
-#: eau/templates/includes/footer.html:4
-msgid "Copyright© 2026 Eau pour tous SARL - Tous droits réservés."
-msgstr "Copyright © 2026 Eau pour tous SARL - All rights reserved."
-
 #: eau/templates/includes/footer.html:5
+msgid "Copyright© 2026"
+msgstr "Copyright© 2026"
+
+#: eau/templates/includes/footer.html:7
+msgid "Tous droits réservés."
+msgstr "All rights reserved."
+
+#: eau/templates/includes/footer.html:10
 msgid "par Mr Copal"
 msgstr "by Mr Copal"
 
 #: eau/templates/includes/navbar.html:25 eau/templates/includes/navbar.html:79
+#: eau/templates/realisations/realisation_detail.html:10
 msgid "Accueil"
 msgstr "Home"
 
@@ -234,7 +240,7 @@ msgid "Contact"
 msgstr "Contact"
 
 #: eau/templates/includes/navbar.html:45 eau/templates/includes/navbar.html:84
-#: eau/templates/index.html:299
+#: eau/templates/index.html:310
 msgid ""
 "Bonjour Eau Pour Tous SARL, je vous contacte depuis votre site web. Je "
 "souhaiterais obtenir un devis express pour un projet de forage. Merci !"
@@ -247,7 +253,9 @@ msgid "Devis Express"
 msgstr "Get a Quote"
 
 #: eau/templates/index.html:26
-msgid "Obtenir un devis gratuit"
+#, fuzzy
+#| msgid "Obtenir un devis gratuit"
+msgid "Obtenir un devis "
 msgstr "Get a Free Quote"
 
 #: eau/templates/index.html:29
@@ -354,27 +362,27 @@ msgstr ""
 "Discover some of our drilling, water catchment, irrigation and development "
 "projects carried out across Cameroon."
 
-#: eau/templates/index.html:233
+#: eau/templates/index.html:244
 msgid "Voir plus de réalisations"
 msgstr "See More Projects"
 
-#: eau/templates/index.html:246
+#: eau/templates/index.html:257
 msgid "Ce que disent nos clients"
 msgstr "What Our Clients Say"
 
-#: eau/templates/index.html:284
+#: eau/templates/index.html:295
 msgid "Parlons de votre projet"
 msgstr "Let's Talk About Your Project"
 
-#: eau/templates/index.html:302
-msgid "Contact WhatsApp"
-msgstr "Contact via WhatsApp"
+#: eau/templates/index.html:313
+msgid "DEVIS EXPRESSS"
+msgstr ""
 
-#: eau/templates/index.html:310
+#: eau/templates/index.html:321
 msgid "Demander un devis"
 msgstr "Request a Quote"
 
-#: eau/templates/index.html:321
+#: eau/templates/index.html:332
 msgid "Envoyer ma demande"
 msgstr "Send My Request"
 
@@ -400,19 +408,68 @@ msgid "en cours"
 msgstr "In Progress"
 
 #: eau/templates/realisations/list.html:53
+msgid "detail"
+msgstr "detail"
+
+#: eau/templates/realisations/list.html:59
 msgid "Aucune réalisation pour le moment."
 msgstr "No projects available at the moment."
 
-#: eau/templates/realisations/list.html:83
+#: eau/templates/realisations/list.html:89
 msgid "retour à la liste"
 msgstr "Back to List"
 
-#: eau/views.py:138
-msgid ""
-"Votre message a été transmis avec succès ! Nos équipes vous recontacteront."
+#: eau/templates/realisations/realisation_detail.html:4
+msgid "Expertise Forage"
 msgstr ""
-"Your message has been successfully sent! Our team will contact you shortly."
 
-#: eau/views.py:141
-msgid "Erreur lors de l'envoi. Veuillez nous contacter via WhatsApp."
-msgstr "Error sending message. Please contact us via WhatsApp."
+#: eau/templates/realisations/realisation_detail.html:34
+#, fuzzy
+#| msgid "projets terminés"
+msgid "Projet Terminé"
+msgstr "Completed Projects"
+
+#: eau/templates/realisations/realisation_detail.html:48
+msgid "Fiche Technique"
+msgstr ""
+
+#: eau/templates/realisations/realisation_detail.html:53
+msgid "À propos du projet"
+msgstr ""
+
+#: eau/templates/realisations/realisation_detail.html:67
+#, fuzzy
+#| msgid "Date de réalisation"
+msgid "Date de livraison"
+msgstr "Completion Date"
+
+#: eau/templates/realisations/realisation_detail.html:88
+msgid "Besoin d'un projet similaire ?"
+msgstr "need a similary project ?"
+
+#: eau/templates/realisations/realisation_detail.html:99
+
+msgid "Retour aux réalisations"
+msgstr "Our Projects"
+
+#: eau/views.py:122
+msgid ""
+"Votre demande est en cours de traitement. Un accusé de réception vous sera "
+"envoyé."
+msgstr ""
+
+#~ msgid "Copyright© 2026 Eau pour tous SARL - Tous droits réservés."
+#~ msgstr "Copyright © 2026 Eau pour tous SARL - All rights reserved."
+
+#~ msgid "Contact WhatsApp"
+#~ msgstr "Contact via WhatsApp"
+
+#~ msgid ""
+#~ "Votre message a été transmis avec succès ! Nos équipes vous "
+#~ "recontacteront."
+#~ msgstr ""
+#~ "Your message has been successfully sent! Our team will contact you "
+#~ "shortly."
+
+#~ msgid "Erreur lors de l'envoi. Veuillez nous contacter via WhatsApp."
+#~ msgstr "Error sending message. Please contact us via WhatsApp."

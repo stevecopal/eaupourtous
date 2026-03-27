@@ -33,7 +33,7 @@ class IndexView(TemplateView):
         # Récupération des données dynamiques
         context['services'] = Service.objects.filter(actif=True)
         context['valeurs'] = Valeur.objects.all()
-        context['realisations'] = Realisation.objects.filter(statut='termine')[:6]
+        context['realisations'] = Realisation.objects.all()[:6]
         context['avis'] = Avis.objects.filter(publie=True)[:6]
         context['documents'] = Document.objects.filter(actif=True)[:3]
         context['medias'] = Media.objects.all
@@ -122,3 +122,13 @@ class ContactView(FormView):
         messages.success(self.request, _("Votre demande est en cours de traitement. Un accusé de réception vous sera envoyé."))
         
         return super().form_valid(form)
+
+
+
+from django.views.generic import DetailView
+from .models import Realisation
+
+class RealisationDetailView(DetailView):
+    model = Realisation
+    template_name = 'realisations/realisation_detail.html'  # Le nom de ton fichier HTML
+    context_object_name = 'realisation'           # Le nom de la variable dans ton HTML

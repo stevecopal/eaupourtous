@@ -47,6 +47,12 @@
                         {{ realisation.get_statut_display }}
                     </span>
                 </div>
+
+                <a href="{% url 'realisation_detail' realisation.pk %}" 
+                class="inline-flex items-center gap-2 bg-[#0052CC] hover:bg-[#0040a3] text-white font-semibold  px-5 py-2 lg rounded-3xl transition-all shadow-lg active:scale-95">
+                    <span>{% trans "detail" %}</span>
+                    <i class="fa-solid fa-arrow-right transition-transform"></i>
+                </a>
             </div>
             {% empty %}
             <div class="col-span-3 text-center py-12">

@@ -1,7 +1,13 @@
 {% load i18n %}
 <footer class="bg-gray-900 text-gray-400 py-12 px-5">
     <div class="container mx-auto text-center">
-      <p>{% trans "Copyright© 2026 Eau pour tous SARL - Tous droits réservés." %}</p><br>
-      <p>{% trans "par Mr Copal" %}</p>
+      <p>
+        {% trans "Copyright© 2026" %} 
+        <span class="uppercase font-bold">Eau pour tous SARL</span> 
+        - {% trans "Tous droits réservés." %}
+    </p>
+      <p> <a href="https://wa.me/237672439721" target="_blank" class="text-green-400 hover:text-white transition-colors duration-300">
+        {% trans "par Mr Copal" %}
+      </a></p>
     </div>
 </footer>

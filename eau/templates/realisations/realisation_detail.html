@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ realisation.titre }} | {% trans "Expertise Forage" %}{% endblock %}
+
+{% block content %}
+<div class="bg-slate-50 border-b border-gray-200 py-8">
+    <div class="container mx-auto px-4">
+        <nav class="flex mb-4 text-sm font-medium text-gray-500" aria-label="Breadcrumb">
+            <a href="{% url 'home' %}" class="hover:text-blue-600">{% trans "Accueil" %}</a>
+            <span class="mx-2">/</span>
+            <a href="{% url 'realisations' %}" class="hover:text-blue-600">{% trans "Réalisations" %}</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-800 truncate">{{ realisation.titre }}</span>
+        </nav>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-blue-900 uppercase tracking-tight">
+            {{ realisation.titre }}
+        </h1>
+    </div>
+</div>
+
+<section class="py-12 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap -mx-4">
+            
+            <div class="w-full lg:w-3/5 px-4 mb-8">
+                <div class="sticky top-24">
+                    {% if realisation.image_principale %}
+                    <div class="relative group overflow-hidden rounded-2xl shadow-2xl">
+                        <img src="{{ realisation.image_principale.url }}" alt="{{ realisation.titre }}" 
+                             class="w-full h-[500px] object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">
+                                {% trans "Projet Terminé" %}
+                            </span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                
+                </div>
+            </div>
+
+            <div class="w-full lg:w-2/5 px-4">
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-xl">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <span class="w-8 h-1 bg-blue-600 mr-3"></span>
+                        {% trans "Fiche Technique" %}
+                    </h2>
+
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-sm font-bold text-blue-600 uppercase tracking-widest mb-2">{% trans "À propos du projet" %}</h3>
+                            <p class="text-gray-600 leading-relaxed text-lg">
+                                {{ realisation.description|linebreaks }}
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 pt-6 border-t border-gray-100">
+                            <div class="flex items-center p-4 bg-slate-50 rounded-xl">
+                                <div class="bg-blue-100 p-3 rounded-lg mr-4 text-blue-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 uppercase">{% trans "Date de livraison" %}</p>
+                                    <p class="font-bold text-gray-800">{{  realisation.date_realisation|date:"d F Y" }}</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center p-4 bg-slate-50 rounded-xl">
+                                <div class="bg-blue-100 p-3 rounded-lg mr-4 text-blue-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 uppercase">{% trans "Localisation" %}</p>
+                                    <p class="font-bold text-gray-800">{{ realisation.localisation }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-8">
+                            <a href="{% url 'home' %}#contact" class="block w-full text-center bg-blue-900 text-white font-bold py-4 rounded-xl hover:bg-blue-800 transition shadow-lg">
+                                {% trans "Besoin d'un projet similaire ?" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center lg:text-left">
+                    <a href="{% url 'realisations' %}" class="inline-flex items-center text-gray-500 hover:text-blue-600 transition font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        {% trans "Retour aux réalisations" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -4,10 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="{% block meta_description %}{{ entreprise.description|truncatewords:30 }}{% endblock %}">
-    <meta name="keywords" content="forage Cameroun, géophysique Douala, puits aménagés, irrigation, captage eau">
+    
+
+    <meta name="description" content="{% block meta_description %}{{ entreprise.description|default:'Expert en forage, géophysique et adduction d’eau potable au Cameroun. Solutions d’irrigation et puits aménagés à Douala et partout ailleurs.'|truncatewords:25 }}{% endblock %}">
+
+    <meta name="keywords" content="forage Cameroun, géophysique Douala, puits aménagés, irrigation, captage eau, adduction eau potable, forage hydraulique Cameroun">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://eaupourtoussarl.com/">
+    <meta property="og:title" content="Eau Pour Tous SARL - Expert en Forage au Cameroun">
+    <meta property="og:description" content="Solutions durables pour l'accès à l'eau potable : forage, puits et irrigation.">
+    <meta property="og:image" content="https://eaupourtoussarl.com/static/img/logo_partage.jpg">
+
     <meta name="author" content="{{ entreprise.nom }}">
     <meta name="theme-color" content="#1E3A8A">
+    
+    <link rel="alternate" hreflang="fr" href="https://eaupourtoussarl.com/fr/">
+    <link rel="alternate" hreflang="en" href="https://eaupourtoussarl.com/en/">
     
     {% block seo %}{% endblock %}
     
