@@ -252,9 +252,7 @@ msgstr ""
 msgid "Devis Express"
 msgstr "Get a Quote"
 
-#: eau/templates/index.html:26
-#, fuzzy
-#| msgid "Obtenir un devis gratuit"
+
 msgid "Obtenir un devis "
 msgstr "Get a Free Quote"
 
@@ -289,6 +287,13 @@ msgstr ""
 #: eau/templates/index.html:87
 msgid "En savoir plus sur nos valeurs"
 msgstr "Learn More About Our Values"
+
+msgid "Voir le document"
+msgstr "see document"
+
+msgid "plus d'infos"
+msgstr "more infos"
+
 
 #: eau/templates/index.html:101
 msgid "Transparence & Conformité"
