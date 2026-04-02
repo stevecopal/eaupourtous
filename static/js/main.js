@@ -100,3 +100,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 6000); // 6 secondes de visibilité
     }
 });
+
+
+
+
+
+
+
+
+// Dashboard JavaScript
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisation
+    console.log('Dashboard chargé');
+    
+    // Gestion responsive sidebar
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('w-20');
+            document.querySelector('.sidebar').classList.toggle('w-72');
+        });
+    }
+    
+    // Notifications
+    const notifBtn = document.getElementById('notificationsBtn');
+    if (notifBtn) {
+        notifBtn.addEventListener('click', function() {
+            // Logique notifications
+        });
+    }
+});

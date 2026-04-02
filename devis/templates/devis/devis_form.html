@@ -1,0 +1,358 @@
+{% extends "base_dashboard.html" %}
+
+{% load i18n %}
+
+{% block extra_css %}
+<style>
+    @media (max-width: 640px) {
+        .form-container {
+            padding: 0.5rem !important;
+        }
+        
+        .input-mobile {
+            font-size: 16px !important;
+            padding: 0.75rem !important;
+        }
+        
+        .table-responsive {
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .table-responsive table {
+            width: 100%;
+            min-width: 500px;
+        }
+        
+        .btn-mobile {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .total-card-mobile {
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+            margin-top: 1rem;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    }
+    
+    input, select, textarea {
+        font-size: 16px;
+    }
+    
+    .section-card {
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+    
+    .btn-action:active {
+        transform: scale(0.98);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container p-3 sm:p-8 max-w-7xl mx-auto min-h-screen bg-slate-50/50">
+    <form method="post" id="devis-form" class="space-y-4 sm:space-y-8">
+        {% csrf_token %}
+        
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-4 sm:p-6 rounded-xl shadow-sm">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-black text-slate-800">
+                    <i class="fas fa-file-invoice-dollar text-blue-500 mr-2"></i>
+                    {% if devis %}{% trans "Modifier le Devis" %}{% else %}{% trans "Nouveau Devis" %}{% endif %}
+                </h1>
+            </div>
+        </div>
+
+        <!-- Informations principales -->
+        <div class="bg-white p-4 sm:p-8 rounded-xl shadow-sm">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-black uppercase text-slate-400 mb-1">
+                        <i class="fas fa-tag mr-1"></i>
+                        {% trans "Objet du Devis" %}
+                    </label>
+                    {{ form.objet }}
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black uppercase text-slate-400 mb-1">
+                        <i class="fas fa-user mr-1"></i>
+                        {% trans "Client" %}
+                    </label>
+                    {{ form.client }}
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black uppercase text-slate-400 mb-1">
+                        <i class="fas fa-calendar-alt mr-1"></i>
+                        {% trans "Date de Validité" %}
+                    </label>
+                    {{ form.date_validite }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteneur des sections -->
+        <div id="sections-container" class="space-y-4 sm:space-y-6"></div>
+
+        <!-- Actions et total -->
+        <div class="space-y-4">
+            <button type="button" id="add-section" 
+                    class="w-full py-4 border-2 border-dashed border-slate-300 bg-slate-50 rounded-xl font-bold text-slate-600 hover:bg-slate-100">
+                <i class="fas fa-layer-group"></i>
+                {% trans "Ajouter une Section" %}
+            </button>
+
+            <!-- Total HT -->
+            <div class="bg-slate-900 text-white p-4 sm:p-6 rounded-xl shadow-xl">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <div>
+                        <p class="text-xs font-bold uppercase text-blue-300">{% trans "Total Général HT" %}</p>
+                    </div>
+                    <div class="text-center">
+                        <span id="grand-total" class="text-2xl sm:text-4xl font-black">0</span>
+                        <span class="text-base font-bold text-blue-400">FCFA</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="{% url 'devis_list' %}" 
+                   class="btn-mobile flex-1 text-center px-4 py-3 border rounded-xl font-bold text-slate-600 hover:bg-slate-50">
+                    <i class="fas fa-times mr-2"></i>
+                    {% trans "Annuler" %}
+                </a>
+                <button type="submit" 
+                        class="btn-mobile flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl font-bold hover:bg-blue-700">
+                    <i class="fas fa-save mr-2"></i>
+                    {% trans "Enregistrer" %}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<template id="ligne-template">
+    <tr class="line-row border-b border-slate-100 hover:bg-slate-50/50">
+        <td class="py-2 pr-2">
+            <input type="text" name="designation" placeholder="Désignation..." 
+                   class="designation-input w-full border rounded-lg p-2 text-sm">
+        </td>
+        <td class="py-2 px-1 w-24">
+            <input type="text" name="unite" placeholder="Unité" value="u"
+                   class="w-full text-center border rounded-lg p-2 text-sm">
+        </td>
+        <td class="py-2 px-1 w-32">
+            <input type="number" name="pu" value="0" step="0.01"
+                   class="pu-input w-full text-right border rounded-lg p-2 text-sm">
+        </td>
+        <td class="py-2 px-1 w-24">
+            <input type="number" name="qte" value="1" step="0.01"
+                   class="qte-input w-full text-center border rounded-lg p-2 text-sm">
+        </td>
+        <td class="py-2 pl-1 w-32 text-right">
+            <div class="flex items-center justify-end gap-2">
+                <span class="row-total font-black text-slate-900">0</span>
+                <button type="button" class="remove-line text-slate-300 hover:text-red-500">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        </td>
+    </table>
+</template>
+
+<script>
+let sectionCounter = 0;
+let existingData = {{ devis_data|default:'null'|safe }};
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+function addLigne(sectionId, ligneData = null) {
+    const tbody = document.getElementById(`lignes-${sectionId}`);
+    const template = document.getElementById("ligne-template");
+    const clone = template.content.cloneNode(true);
+    
+    const rowIndex = tbody.children.length;
+    
+    if (ligneData) {
+        const designationInput = clone.querySelector('.designation-input');
+        const uniteInput = clone.querySelector('input[name="unite"]');
+        const puInput = clone.querySelector('.pu-input');
+        const qteInput = clone.querySelector('.qte-input');
+        
+        if (designationInput) designationInput.value = ligneData.designation || '';
+        if (uniteInput) uniteInput.value = ligneData.unite || 'u';
+        if (puInput) puInput.value = ligneData.prix_unitaire || 0;
+        if (qteInput) qteInput.value = ligneData.quantite || 1;
+    }
+    
+    // Renommer les champs pour qu'ils soient capturés par la vue
+    const inputs = clone.querySelectorAll('input');
+    inputs.forEach(input => {
+        const oldName = input.getAttribute('name');
+        if (oldName) {
+            input.setAttribute('name', `sections-${sectionId}-lignes-${rowIndex}-${oldName}`);
+        }
+    });
+    
+    tbody.appendChild(clone);
+    calculateTotals();
+}
+
+function addSection(sectionData = null, lignesData = null) {
+    const container = document.getElementById("sections-container");
+    const sectionId = sectionCounter;
+    const sectionTitle = sectionData ? sectionData.titre : '';
+    
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'section-card bg-white rounded-xl border shadow-sm overflow-hidden';
+    sectionDiv.setAttribute('data-section-id', sectionId);
+    
+    sectionDiv.innerHTML = `
+        <div class="bg-slate-50 px-4 py-3 border-b">
+            <div class="flex justify-between items-center gap-3">
+                <div class="flex items-center gap-3 flex-1">
+                    <span class="flex items-center justify-center w-8 h-8 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                        ${sectionCounter + 1}
+                    </span>
+                    <input type="text" name="sections-${sectionId}-titre" 
+                           value="${escapeHtml(sectionTitle)}"
+                           placeholder="Titre de la section" 
+                           class="flex-1 border rounded-lg p-2 font-bold text-sm">
+                </div>
+                <button type="button" class="remove-section text-slate-400 hover:text-red-500 p-2">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-4">
+            <div class="table-responsive overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-xs font-bold text-slate-400 uppercase border-b">
+                            <th class="py-2 text-left">Désignation</th>
+                            <th class="py-2 text-center">Unité</th>
+                            <th class="py-2 text-right">P.U</th>
+                            <th class="py-2 text-center">Qté</th>
+                            <th class="py-2 text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lignes-${sectionId}" class="divide-y"></tbody>
+                </table>
+            </div>
+            <div class="mt-4 pt-3 border-t flex justify-between items-center">
+                <button type="button" onclick="addLigne(${sectionId})" 
+                        class="text-sm font-bold text-blue-600 hover:text-blue-800">
+                    <i class="fas fa-plus-circle"></i> Ajouter une ligne
+                </button>
+                <div>
+                    <span class="text-xs font-bold text-slate-400">Sous-total :</span>
+                    <span class="section-subtotal font-bold text-slate-800 ml-2">0</span>
+                    <span class="text-xs text-slate-400">FCFA</span>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(sectionDiv);
+    
+    // Ajouter les lignes
+    if (lignesData && lignesData.length > 0) {
+        lignesData.forEach(ligne => {
+            addLigne(sectionId, ligne);
+        });
+    } else {
+        addLigne(sectionId);
+    }
+    
+    sectionCounter++;
+}
+
+function calculateTotals() {
+    let grandTotal = 0;
+    
+    document.querySelectorAll(".section-card").forEach(section => {
+        let sectionTotal = 0;
+        section.querySelectorAll(".line-row").forEach(row => {
+            let pu = parseFloat(row.querySelector(".pu-input").value) || 0;
+            let qte = parseFloat(row.querySelector(".qte-input").value) || 0;
+            let total = pu * qte;
+            const rowTotalSpan = row.querySelector(".row-total");
+            if (rowTotalSpan) {
+                rowTotalSpan.innerText = total.toLocaleString('fr-FR');
+            }
+            sectionTotal += total;
+        });
+        const sectionSubtotal = section.querySelector(".section-subtotal");
+        if (sectionSubtotal) {
+            sectionSubtotal.innerText = sectionTotal.toLocaleString('fr-FR');
+        }
+        grandTotal += sectionTotal;
+    });
+    
+    document.getElementById("grand-total").innerText = grandTotal.toLocaleString('fr-FR');
+}
+
+// Suppression
+document.addEventListener("click", function(e) {
+    if (e.target.closest(".remove-section")) {
+        if (confirm("Supprimer cette section ?")) {
+            e.target.closest(".section-card").remove();
+            calculateTotals();
+            // Renuméroter
+            document.querySelectorAll(".section-card").forEach((card, idx) => {
+                const numberSpan = card.querySelector(".bg-slate-800");
+                if (numberSpan) numberSpan.innerText = idx + 1;
+            });
+        }
+    }
+    if (e.target.closest(".remove-line")) {
+        const row = e.target.closest("tr");
+        if (row) {
+            row.remove();
+            calculateTotals();
+        }
+    }
+});
+
+// Recalcul
+document.addEventListener("input", function(e) {
+    if (e.target.classList.contains("pu-input") || 
+        e.target.classList.contains("qte-input")) {
+        calculateTotals();
+    }
+});
+
+// Initialisation
+document.getElementById("add-section")?.addEventListener("click", () => addSection());
+
+function loadExistingData() {
+    if (existingData && existingData.sections) {
+        existingData.sections.forEach(section => {
+            addSection(
+                { titre: section.titre },
+                section.lignes
+            );
+        });
+    } else {
+        addSection();
+    }
+}
+
+loadExistingData();
+</script>
+
+{% endblock %}

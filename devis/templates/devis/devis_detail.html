@@ -1,0 +1,164 @@
+{% extends "base_dashboard.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<div class="p-6 bg-slate-100 min-h-screen">
+    
+    <div class="flex flex-wrap justify-between items-center mb-8 gap-4 no-print">
+        <div class="flex items-center gap-4">
+            <a href="{% url 'devis_list' %}" class="bg-white p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-blue-600 shadow-sm transition">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div>
+                <h1 class="text-xl font-black text-slate-800 uppercase tracking-tight">{% trans "Aperçu du Devis" %}</h1>
+                <p class="text-sm text-slate-500 font-bold">Réf: {{ devis.reference }}</p>
+            </div>
+        </div>
+        
+        <div class="flex gap-3">
+            <a href="{% url 'devis_edit' devis.pk %}" class="bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-xl hover:bg-slate-50 font-bold transition shadow-sm">
+                <i class="fas fa-edit mr-2 text-blue-500"></i> {% trans "Modifier" %}
+            </a>
+            <a href="{% url 'generate_pdf' devis.pk %}" target="_blank" class="bg-blue-700 text-white px-5 py-2.5 rounded-xl hover:bg-blue-800 font-bold shadow-lg transition">
+                <i class="fas fa-file-pdf mr-2"></i> {% trans "Télécharger PDF" %}
+            </a>
+            <button onclick="window.print()" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-black font-bold shadow-lg transition">
+                <i class="fas fa-print mr-2"></i> {% trans "Imprimer" %}
+            </button>
+        </div>
+    </div>
+
+    <div class="relative bg-white max-w-4xl mx-auto shadow-2xl border border-slate-200 p-12 rounded-sm mb-20 overflow-hidden" id="printable-area">
+        
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.07] z-0">
+            {% if entreprise.logo %}
+                <img src="{{ entreprise.logo.url }}" class="w-4/5 transform -rotate-12">
+            {% else %}
+                <h1 class="text-[120px] font-black -rotate-45 uppercase text-slate-900">{{ entreprise.nom }}</h1>
+            {% endif %}
+        </div>
+
+        <div class="relative z-10">
+            <div class="flex justify-between items-start border-b-4 border-slate-900 pb-8 mb-10">
+                <div class="w-1/3">
+                    {% if entreprise.logo %}
+                        <img src="{{ entreprise.logo.url }}" class="h-24 w-auto object-contain">
+                    {% else %}
+                        <div class="text-3xl font-black text-slate-900 uppercase">{{ entreprise.nom }}</div>
+                    {% endif %}
+                </div>
+                <div class="text-right">
+                    <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tighter">{{ entreprise.nom }}</h2>
+                    <div class="text-sm text-slate-500 font-bold mt-2 leading-relaxed">
+                        {{ entreprise.adresse }}<br>
+                        Tel: <span class="text-slate-800">{{ entreprise.telephone }}</span><br>
+                        Email: <span class="text-slate-800">{{ entreprise.email }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-12">
+                <h1 class="inline-block border-4 border-slate-900 px-8 py-3 text-2xl font-black text-slate-900 uppercase tracking-widest">
+                    {% trans "DEVIS" %} N° {{ devis.reference }}
+                </h1>
+                <p class="mt-4 text-lg font-black text-slate-700 uppercase">OBJET : {{ devis.objet }}</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-12 mb-12 p-8 border-l-8 border-slate-900 bg-slate-50/40">
+                <div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{% trans "DESTINATAIRE" %}</p>
+                    <h3 class="text-xl font-black text-slate-900 uppercase">{{ devis.client.nom }}</h3>
+                    <p class="text-slate-600 font-bold mt-1">{{ devis.client.adresse }}</p>
+                    <p class="text-slate-500 font-bold italic mt-2">{{ devis.client.telephone }}</p>
+                </div>
+                <div class="text-right flex flex-col justify-end">
+                    <p class="text-sm font-bold text-slate-500">{% trans "Date d'émission" %}: <span class="text-slate-900">{{ devis.date_creation|date:"d/m/Y" }}</span></p>
+                    <p class="text-sm font-bold text-slate-500">{% trans "Validité" %}: <span class="text-red-600">{{ devis.date_validite|date:"d/m/Y" }}</span></p>
+                </div>
+            </div>
+
+            {% for section in sections %}
+            <div class="mb-10">
+                <div class="bg-slate-900 text-white px-4 py-2 font-black uppercase text-xs tracking-widest mb-1 shadow-md">
+                    {{ section.titre }}
+                </div>
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b-2 border-slate-200 text-[10px] font-black uppercase text-slate-400">
+                            <th class="py-3 px-2 text-left">{% trans "Désignation" %}</th>
+                            <th class="py-3 px-2 text-center w-20">{% trans "Unité" %}</th>
+                            <th class="py-3 px-2 text-right w-32">{% trans "P.U (FCFA)" %}</th>
+                            <th class="py-3 px-2 text-center w-20">{% trans "Qté" %}</th>
+                            <th class="py-3 px-2 text-right w-32">{% trans "Montant" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for ligne in section.lignes.all %}
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-2 font-bold text-slate-800">{{ ligne.designation }}</td>
+                            <td class="py-4 px-2 text-center font-bold text-slate-500 uppercase italic text-xs">{{ ligne.unite }}</td>
+                            <td class="py-4 px-2 text-right font-black text-slate-700">{{ ligne.prix_unitaire|floatformat:0 }}</td>
+                            <td class="py-4 px-2 text-center font-black text-slate-900">{{ ligne.quantite|floatformat:0 }}</td>
+                            <td class="py-4 px-2 text-right font-black text-slate-900">{{ ligne.montant_ligne|floatformat:0 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+
+            <div class="mt-16 flex justify-between items-end">
+                <div class="text-sm font-bold text-slate-500 italic">
+                    Fait à {{ entreprise.ville|default:"Douala" }}, le {{ devis.date_creation|date:"d/m/Y" }}
+                </div>
+                <div class="w-80">
+                    <div class="border-t-4 border-slate-900 pt-4 px-2">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-slate-400 text-[10px] font-black uppercase">{% trans "TOTAL GÉNÉRAL HT" %}</span>
+                            <span class="text-3xl font-black text-slate-900 tabular-nums">{{ devis.total_ht|floatformat:0 }} <small class="text-xs">FCFA</small></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-20 grid grid-cols-2 gap-20 text-center">
+                <div>
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-20 underline underline-offset-4 decoration-2 decoration-blue-500">Le Client</p>
+                    <p class="text-[9px] text-slate-400 italic">{% trans "(Précédé de la mention bon pour accord)" %}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-20 underline underline-offset-4 decoration-2 decoration-slate-900">La Direction</p>
+                    <p class="text-sm font-black text-slate-800 uppercase">{{ entreprise.nom }}</p>
+                </div>
+            </div>
+
+            <div class="mt-24 pt-8 border-t border-slate-100 text-center">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">
+                    {{ entreprise.nom }} • RCCM: {{ entreprise.rccm|default:"---" }} • NIU: {{ entreprise.niu|default:"---" }}
+                </p>
+                <p class="text-[9px] text-slate-400 font-bold uppercase italic">
+                    {{ entreprise.slogan|default:"Votre partenaire de confiance" }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .no-print { display: none !important; }
+    body { background: white !important; margin: 0; padding: 0; }
+    .min-h-screen { background: white !important; padding: 0 !important; }
+    .shadow-2xl { border: none !important; box-shadow: none !important; }
+    #printable-area { width: 100% !important; max-width: 100% !important; border: none !important; margin: 0 !important; padding: 0.5cm !important; }
+    /* Force la visibilité du filigrane à l'impression */
+    .opacity-\[0\.07\] { opacity: 0.1 !important; }
+}
+
+/* Style spécifique pour les données bien visibles */
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
+}
+</style>
+{% endblock %}

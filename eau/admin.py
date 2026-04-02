@@ -1,10 +1,18 @@
+
 from django.contrib import admin
 from django.utils.html import format_html
 from modeltranslation.admin import TranslationAdmin # <--- Import crucial
 from .models import (
     Entreprise, Document, Service, Realisation, 
-    Avis, Media, Valeur
+    Avis, Media,  Valeur 
 )
+from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import gettext_lazy as _
+
+
+
+
+
 
 @admin.register(Entreprise)
 class EntrepriseAdmin(TranslationAdmin): # On change ModelAdmin par TranslationAdmin
@@ -77,3 +85,4 @@ class ValeurAdmin(TranslationAdmin):
     def icone_view(self, obj):
         return format_html('<i class="{}" style="font-size: 1.2rem; color: #0056b3;"></i> <span style="margin-left:10px">{}</span>', obj.icone, obj.icone)
     icone_view.short_description = "Icône"
+

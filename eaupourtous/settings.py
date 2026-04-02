@@ -28,7 +28,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1').split(',')
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://miquel-unlitigated-carmen.ngrok-free.dev"
+    "https://miquel-unlitigated-carmen.ngrok-free.dev",
     "https://172.239.26.125",
     "http://172.239.26.125",
     'https://eaupourtoussarl.com', 
@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_tailwind',
     'eau',
+    'devis',
+    'maintenance',
 ]
 
 SITE_ID = 1
@@ -189,3 +191,7 @@ MODELTRANSLATION_ADMIN_THEME = 'suit' # Ou un autre thème si tu en utilises un
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True # Pour éviter les warnings Celery 6+
+
+
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'home'

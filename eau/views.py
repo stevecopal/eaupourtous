@@ -15,7 +15,7 @@ from django.views.generic import FormView
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 
-from eau.forms import ContactForm
+from eau.forms import ContactForm, LoginForm
 from eau.tasks import send_contact_email_task
 
 from .models import (
@@ -132,3 +132,33 @@ class RealisationDetailView(DetailView):
     model = Realisation
     template_name = 'realisations/realisation_detail.html'  # Le nom de ton fichier HTML
     context_object_name = 'realisation'           # Le nom de la variable dans ton HTML
+
+
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView, ListView
+from devis.models import Client, Devis
+
+class CustomLoginView(LoginView):
+    template_name = 'eau/login.html'
+    form_class = LoginForm
+    redirect_authenticated_user = True
+
+class DashboardView(LoginRequiredMixin, ListView):
+    """
+    On utilise ListView pour afficher directement les derniers clients 
+    sur le dashboard, c'est plus pratique.
+    """
+    model = Client
+    template_name = 'eau/dashboard.html'
+    context_object_name = 'recent_clients'
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_clients'] = Client.objects.count()
+        # Ici on pourra ajouter les totaux des autres apps plus tard
+        return context
+    
+class CustomLogoutView(LogoutView):
+    next_page = 'home' # Redirige vers login après déconnexion

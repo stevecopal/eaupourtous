@@ -22,6 +22,8 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('', include('eau.urls')),
+    path('devis/', include('devis.urls')),
+    path('maintenance/', include('maintenance.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     prefix_default_language=True # Optionnel : ajoute /fr/ même pour la langue par défaut

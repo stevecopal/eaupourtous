@@ -7,6 +7,13 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
+from django.contrib.auth.models import AbstractUser
+
+
+
+
+
+
 class Entreprise(models.Model):
     """Modèle pour les informations de l'entreprise"""
     nom = models.CharField(_('Nom'), max_length=200, default='Eau pour tous SARL')
@@ -149,3 +156,6 @@ class Valeur(models.Model):
     
     def __str__(self):
         return self.titre
+    
+
+# authentification

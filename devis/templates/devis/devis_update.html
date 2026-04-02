@@ -1,0 +1,240 @@
+{% extends "base_dashboard.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <form method="post" id="devis-form">
+        {% csrf_token %}
+        
+        <div class="bg-white p-4 rounded shadow mb-4">
+            <h1 class="text-2xl font-bold mb-4">
+                <i class="fas fa-edit text-blue-500 mr-2"></i>
+                {% trans "Modifier le Devis" %} {{ devis.reference }}
+            </h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block font-bold mb-1">{% trans "Objet du Devis" %}</label>
+                    {{ form.objet }}
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">{% trans "Client" %}</label>
+                    {{ form.client }}
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">{% trans "Date de Validité" %}</label>
+                    {{ form.date_validite }}
+                </div>
+            </div>
+        </div>
+        
+        <div id="sections-container" class="space-y-4"></div>
+        
+        <div class="mt-4">
+            <button type="button" id="add-section" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                <i class="fas fa-plus"></i> {% trans "Ajouter une Section" %}
+            </button>
+        </div>
+        
+        <div class="mt-4 bg-gray-800 text-white p-4 rounded">
+            <div class="flex justify-between items-center">
+                <span class="font-bold">{% trans "Total Général HT" %}</span>
+                <span id="grand-total" class="text-2xl font-bold">0</span>
+                <span>FCFA</span>
+            </div>
+        </div>
+        
+        <div class="mt-4 flex gap-3">
+            <a href="{% url 'devis_detail' devis.pk %}" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">
+                {% trans "Annuler" %}
+            </a>
+            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+                <i class="fas fa-save"></i> {% trans "Enregistrer les modifications" %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<template id="ligne-template">
+    <tr class="line-row border-b">
+        <td class="py-2 pr-2">
+            <input type="text" name="designation" placeholder="Désignation..." 
+                   class="designation-input w-full border rounded p-2">
+        </td>
+        <td class="py-2 px-1 w-24">
+            <input type="text" name="unite" placeholder="Unité" value="u"
+                   class="w-full text-center border rounded p-2">
+        </td>
+        <td class="py-2 px-1 w-32">
+            <input type="number" name="pu" value="0" step="0.01"
+                   class="pu-input w-full text-right border rounded p-2">
+        </td>
+        <td class="py-2 px-1 w-24">
+            <input type="number" name="qte" value="1" step="0.01"
+                   class="qte-input w-full text-center border rounded p-2">
+        </td>
+        <td class="py-2 pl-1 w-32 text-right">
+            <div class="flex items-center justify-end gap-2">
+                <span class="row-total font-bold">0</span>
+                <button type="button" class="remove-line text-red-500 hover:text-red-700">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+</template>
+
+<script>
+let sectionCounter = 0;
+const existingData = {{ devis_data|safe }};
+
+function addLigne(sectionId, ligneData = null) {
+    const tbody = document.getElementById(`lignes-${sectionId}`);
+    const template = document.getElementById("ligne-template");
+    const clone = template.content.cloneNode(true);
+    
+    const rowIndex = tbody.children.length;
+    
+    if (ligneData) {
+        clone.querySelector('.designation-input').value = ligneData.designation || '';
+        clone.querySelector('input[name="unite"]').value = ligneData.unite || 'u';
+        clone.querySelector('.pu-input').value = ligneData.prix_unitaire || 0;
+        clone.querySelector('.qte-input').value = ligneData.quantite || 1;
+    }
+    
+    // Renommer les champs avec les bons indices
+    clone.querySelectorAll('input').forEach(input => {
+        const oldName = input.getAttribute('name');
+        if (oldName) {
+            input.setAttribute('name', `sections-${sectionId}-lignes-${rowIndex}-${oldName}`);
+        }
+    });
+    
+    tbody.appendChild(clone);
+    calculateTotals();
+}
+
+function addSection(sectionData = null, lignesData = null, sectionIndex = null) {
+    const container = document.getElementById("sections-container");
+    const sectionId = sectionIndex !== null ? sectionIndex : sectionCounter;
+    const sectionTitle = sectionData ? sectionData.titre : '';
+    
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'bg-white rounded shadow p-4 mb-4';
+    sectionDiv.setAttribute('data-section-id', sectionId);
+    
+    sectionDiv.innerHTML = `
+        <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-3 flex-1">
+                <span class="font-bold text-lg">${sectionIndex !== null ? parseInt(sectionIndex) + 1 : sectionCounter + 1}</span>
+                <input type="text" name="sections-${sectionId}-titre" 
+                       value="${escapeHtml(sectionTitle)}"
+                       placeholder="Titre de la section" 
+                       class="flex-1 border rounded p-2 font-bold">
+            </div>
+            <button type="button" class="remove-section text-red-500 hover:text-red-700 ml-2">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-2 text-left">Désignation</th>
+                        <th class="p-2 text-center w-24">Unité</th>
+                        <th class="p-2 text-right w-32">P.U</th>
+                        <th class="p-2 text-center w-24">Qté</th>
+                        <th class="p-2 text-right w-32">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="lignes-${sectionId}"></tbody>
+            </table>
+        </div>
+        <div class="mt-3 pt-3 border-t flex justify-between items-center">
+            <button type="button" onclick="addLigne(${sectionId})" class="text-blue-500 hover:text-blue-700">
+                <i class="fas fa-plus"></i> Ajouter une ligne
+            </button>
+            <div>
+                <span class="font-bold">Sous-total :</span>
+                <span class="section-subtotal font-bold ml-2">0</span>
+                <span>FCFA</span>
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(sectionDiv);
+    
+    if (lignesData && lignesData.length > 0) {
+        lignesData.forEach(ligne => addLigne(sectionId, ligne));
+    } else {
+        addLigne(sectionId);
+    }
+    
+    if (sectionIndex === null) sectionCounter++;
+}
+
+function calculateTotals() {
+    let grandTotal = 0;
+    document.querySelectorAll(".section-card").forEach(section => {
+        let sectionTotal = 0;
+        section.querySelectorAll(".line-row").forEach(row => {
+            let pu = parseFloat(row.querySelector(".pu-input").value) || 0;
+            let qte = parseFloat(row.querySelector(".qte-input").value) || 0;
+            let total = pu * qte;
+            row.querySelector(".row-total").innerText = total.toLocaleString('fr-FR');
+            sectionTotal += total;
+        });
+        section.querySelector(".section-subtotal").innerText = sectionTotal.toLocaleString('fr-FR');
+        grandTotal += sectionTotal;
+    });
+    document.getElementById("grand-total").innerText = grandTotal.toLocaleString('fr-FR');
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+// Charger les données existantes
+function loadExistingData() {
+    if (existingData && existingData.length > 0) {
+        existingData.forEach((section, idx) => {
+            addSection({ titre: section.titre }, section.lignes, idx);
+        });
+        sectionCounter = existingData.length;
+    } else {
+        addSection();
+    }
+}
+
+// Événements
+document.getElementById("add-section").addEventListener("click", () => addSection());
+
+document.addEventListener("click", function(e) {
+    if (e.target.closest(".remove-section")) {
+        if (confirm("Supprimer cette section ?")) {
+            e.target.closest(".section-card").remove();
+            calculateTotals();
+        }
+    }
+    if (e.target.closest(".remove-line")) {
+        e.target.closest("tr").remove();
+        calculateTotals();
+    }
+});
+
+document.addEventListener("input", function(e) {
+    if (e.target.classList.contains("pu-input") || e.target.classList.contains("qte-input")) {
+        calculateTotals();
+    }
+});
+
+// Initialisation
+loadExistingData();
+</script>
+{% endblock %}

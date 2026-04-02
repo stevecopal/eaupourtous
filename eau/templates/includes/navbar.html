@@ -48,7 +48,15 @@
                 <i class="fab fa-whatsapp mr-2"></i>
                 {% trans "Devis Express" %}
             </a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="text-red-500 hover:text-red-700">
+                    Déconnexion
+                </button>
+            </form>
+
         </nav>
+
 
         <div class="flex items-center gap-2 md:hidden">
             <form action="{% url 'set_language' %}" method="post" class="relative flex items-center group">

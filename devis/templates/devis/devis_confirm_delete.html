@@ -1,0 +1,94 @@
+{% extends "base_dashboard.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-red-50 px-6 py-4 border-b border-red-100">
+            <div class="flex items-center gap-3">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-red-800">{% trans "Confirmation de suppression" %}</h1>
+                    <p class="text-sm text-red-600">{% trans "Cette action est irréversible" %}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="px-6 py-4">
+            <div class="mb-6">
+                <p class="text-gray-700 mb-2">
+                    {% trans "Êtes-vous sûr de vouloir supprimer le devis suivant ?" %}
+                </p>
+                
+                <div class="bg-gray-50 p-4 rounded-lg mt-3">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-500">{% trans "Référence" %}:</span>
+                            <span class="text-sm font-semibold text-gray-900">{{ devis.reference }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-500">{% trans "Objet" %}:</span>
+                            <span class="text-sm text-gray-900">{{ devis.objet|truncatechars:50 }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-500">{% trans "Client" %}:</span>
+                            <span class="text-sm text-gray-900">{{ devis.client.nom }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-500">{% trans "Date de création" %}:</span>
+                            <span class="text-sm text-gray-900">{{ devis.date_creation|date:"d/m/Y" }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-500">{% trans "Total HT" %}:</span>
+                            <span class="text-sm font-bold text-gray-900">{{ devis.total_ht|floatformat:0 }} FCFA</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-500">{% trans "Statut" %}:</span>
+                            {% if devis.statut == 'envoye' %}
+                                <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">{% trans "Envoyé" %}</span>
+                            {% elif devis.statut == 'accepte' %}
+                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{% trans "Accepté" %}</span>
+                            {% else %}
+                                <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">{% trans "Refusé" %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle text-yellow-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">
+                            {% trans "Attention : La suppression de ce devis entraînera également la suppression de toutes ses sections et lignes associées." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-3">
+                <form method="post" class="flex-1">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            class="w-full bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                        <i class="fas fa-trash-alt mr-2"></i>
+                        {% trans "Oui, supprimer" %}
+                    </button>
+                </form>
+                <a href="{% url 'devis_list' %}" 
+                   class="flex-1 text-center bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-times mr-2"></i>
+                    {% trans "Non, annuler" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
