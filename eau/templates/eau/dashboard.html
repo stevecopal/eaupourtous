@@ -1,53 +1,106 @@
 {% extends 'base_dashboard.html' %}
 {% load static i18n %}
 
-{% block title %}{% trans "Tableau de bord - Eau Pour Tous" %}{% endblock %}
-
-{% block header_title %}{% trans "Tableau de bord" %}{% endblock %}
-
 {% block content %}
-<div class="space-y-6">
-    <!-- Bienvenue -->
-    <div class="bg-gradient-to-r from-primary to-primary-light rounded-xl p-6 text-black">
-        <h1 class="text-2xl font-bold mb-2">
-            {% trans "Bienvenue" %} {{ user.get_full_name|default:user.username }} 👋
-        </h1>
-        <p class="opacity-90">
-            {% trans "Bienvenue dans votre espace d'administration Eau Pour Tous" %}
-        </p>
+<div class="space-y-8 p-4">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-black text-slate-800">
+                {% trans "Tableau de bord" %} <span class="text-blue-600">.</span>
+            </h1>
+            <p class="text-sm text-slate-500 font-bold uppercase tracking-widest">
+                {% trans "Session de" %} {{ user.username }}
+            </p>
+        </div>
+        <div class="text-right no-print">
+            <p class="text-xs font-bold text-slate-400 uppercase">{% trans "Date du jour" %}</p>
+            <p class="font-black text-slate-700">{% now "d F Y" %}</p>
+        </div>
     </div>
     
-    <!-- Statistiques (à compléter plus tard) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-xl p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">{% trans "Total Devis" %}</p>
-                    <p class="text-3xl font-bold text-primary">0</p>
-                </div>
-                <i class="fas fa-file-invoice-dollar text-4xl text-gray-300"></i>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="border-l-4 border-green-500 bg-white p-6 shadow-sm rounded-r-xl">
+            <p class="text-slate-400 text-[10px] font-black uppercase tracking-wider">{% trans "Chiffre d'Affaires" %}</p>
+            <p class="text-2xl font-black text-slate-900 tabular-nums">{{ ca_total|floatformat:0 }} <small class="text-xs">FCFA</small></p>
+        </div>
+
+        <div class="border-l-4 border-blue-600 bg-white p-6 shadow-sm rounded-r-xl">
+            <p class="text-slate-400 text-[10px] font-black uppercase tracking-wider">{% trans "Devis Émis" %}</p>
+            <p class="text-2xl font-black text-slate-900 tabular-nums">{{ total_devis }}</p>
         </div>
         
-        <div class="bg-white rounded-xl p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">{% trans "Maintenances à venir" %}</p>
-                    <p class="text-3xl font-bold text-secondary">0</p>
-                </div>
-                <i class="fas fa-calendar-alt text-4xl text-gray-300"></i>
-            </div>
+        <div class="border-l-4 border-orange-500 bg-white p-6 shadow-sm rounded-r-xl">
+            <p class="text-slate-400 text-[10px] font-black uppercase tracking-wider">{% trans "Maintenances" %}</p>
+            <p class="text-2xl font-black text-slate-900 tabular-nums">{{ maintenances_count }}</p>
         </div>
         
-        <div class="bg-white rounded-xl p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">{% trans "Clients actifs" %}</p>
-                    <p class="text-3xl font-bold text-accent">0</p>
-                </div>
-                <i class="fas fa-users text-4xl text-gray-300"></i>
+        <div class="border-l-4 border-slate-800 bg-white p-6 shadow-sm rounded-r-xl">
+            <p class="text-slate-400 text-[10px] font-black uppercase tracking-wider">{% trans "Clients Actifs" %}</p>
+            <p class="text-2xl font-black text-slate-900 tabular-nums">{{ total_clients }}</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <h3 class="font-black text-slate-800 uppercase text-xs tracking-widest">{% trans "Derniers Devis Générés" %}</h3>
+                <a href="{% url 'devis_list' %}" class="text-[10px] font-black text-blue-600 uppercase hover:underline">{% trans "Voir tout" %}</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-[10px] font-black text-slate-400 uppercase border-b border-slate-50">
+                            <th class="p-4 tracking-tighter">{% trans "Référence" %}</th>
+                            <th class="p-4">{% trans "Client" %}</th>
+                            <th class="p-4 text-right">{% trans "Montant" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for devis in derniers_devis %}
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="p-4 font-bold text-blue-600 text-sm">#{{ devis.reference }}</td>
+                            <td class="p-4 text-sm font-bold text-slate-700">{{ devis.client.nom }}</td>
+                            <td class="p-4 text-right font-black text-slate-900 text-sm tabular-nums">{{ devis.total_ht|floatformat:0 }} <span class="text-[10px]">XAF</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="p-10 text-center text-slate-400 italic text-sm">{% trans "Aucun devis récent" %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
+
+        <div class="space-y-6">
+            <div class="bg-slate-900 rounded-2xl p-6 text-white shadow-xl">
+                <h3 class="font-black uppercase text-xs tracking-widest mb-4 opacity-60">{% trans "Actions Rapides" %}</h3>
+                <div class="grid grid-cols-1 gap-3">
+                    <a href="{% url 'devis_create' %}" class="flex items-center justify-between bg-white/10 hover:bg-white/20 p-4 rounded-xl transition group">
+                        <span class="font-bold text-sm">{% trans "Nouveau Devis" %}</span>
+                        <i class="fas fa-plus-circle text-blue-400 group-hover:scale-110 transition"></i>
+                    </a>
+                    <a href="{% url 'devis_create' %}" class="flex items-center justify-between bg-white/10 hover:bg-white/20 p-4 rounded-xl transition group">
+                        <span class="font-bold text-sm">{% trans "Ajouter un Client" %}</span>
+                        <i class="fas fa-user-plus text-green-400 group-hover:scale-110 transition"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-6">
+                <div class="flex gap-3">
+                    <i class="fas fa-info-circle text-blue-600 mt-1"></i>
+                    <div>
+                        <p class="text-sm font-black text-blue-900 uppercase tracking-tighter">{% trans "Note" %}</p>
+                        <p class="text-xs text-blue-700 font-medium leading-relaxed mt-1">
+                            {% trans "Pensez à relancer les devis en attente depuis plus de 7 jours pour optimiser vos ventes." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 {% endblock %}

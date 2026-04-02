@@ -17,7 +17,9 @@ from django.shortcuts import redirect
 
 from eau.forms import ContactForm, LoginForm
 from eau.tasks import send_contact_email_task
-
+from django.shortcuts import render
+from devis.models import Devis, Client
+from django.db.models import Sum
 from .models import (
     Entreprise, Service, Realisation, Avis, 
     Valeur, Media, Document
@@ -144,21 +146,14 @@ class CustomLoginView(LoginView):
     form_class = LoginForm
     redirect_authenticated_user = True
 
-class DashboardView(LoginRequiredMixin, ListView):
-    """
-    On utilise ListView pour afficher directement les derniers clients 
-    sur le dashboard, c'est plus pratique.
-    """
-    model = Client
-    template_name = 'eau/dashboard.html'
-    context_object_name = 'recent_clients'
-    paginate_by = 5
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['total_clients'] = Client.objects.count()
-        # Ici on pourra ajouter les totaux des autres apps plus tard
-        return context
+def dashboard(request):
+    context = {
+        'total_devis': Devis.objects.count(),
+        'total_clients': Client.objects.count(),
+        'derniers_devis': Devis.objects.order_by('-date_creation')[:5],
+        'ca_total': Devis.objects.aggregate(Sum('total_ht'))['total_ht__sum'] or 0,
+    }
+    return render(request, 'eau/dashboard.html', context)
     
 class CustomLogoutView(LogoutView):
     next_page = 'home' # Redirige vers login après déconnexion

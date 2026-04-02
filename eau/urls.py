@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import CustomLoginView, CustomLogoutView, DashboardView
+from .views import CustomLoginView, CustomLogoutView
 
 
 urlpatterns = [
@@ -13,6 +13,6 @@ urlpatterns = [
     # auth
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
-    path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 
 ]
