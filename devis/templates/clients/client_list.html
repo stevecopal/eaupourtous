@@ -1,0 +1,187 @@
+{% extends "base_dashboard.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Clients" %}{% endblock %}
+
+{% block content %}
+<div class="p-6 bg-slate-50 min-h-screen">
+    <!-- En-tête -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div>
+            <h1 class="text-2xl font-black text-slate-800 tracking-tight uppercase">
+                {% trans "Clients" %} <span class="text-blue-600">.</span>
+            </h1>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                {% trans "Gestion de la base clients" %}
+            </p>
+        </div>
+        <a href="{% url 'client_create' %}" 
+           class="bg-slate-900 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg hover:bg-black transition flex items-center gap-2">
+            <i class="fas fa-plus mr-2 text-blue-400"></i>
+            {% trans "Nouveau client" %}
+        </a>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">{% trans "Total clients" %}</p>
+            <p class="text-2xl font-black text-slate-800">{{ total_clients|default:clients|length }}</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">{% trans "Avec devis" %}</p>
+            <p class="text-2xl font-black text-blue-600">{{ clients_with_devis|default:"-" }}</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">{% trans "Avec maintenance" %}</p>
+            <p class="text-2xl font-black text-green-600">{{ clients_with_maintenance|default:"-" }}</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">{% trans "Nouveaux (30j)" %}</p>
+            <p class="text-2xl font-black text-purple-600">{{ new_clients_30d|default:"-" }}</p>
+        </div>
+    </div>
+
+    <!-- Barre de recherche -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-6">
+        <form action="{% url 'client_list' %}" method="get" class="relative">
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-300"></i>
+            <input type="text" 
+                   name="q" 
+                   value="{{ query|default:'' }}"
+                   placeholder="{% trans 'Rechercher par nom, email ou téléphone...' %}"
+                   class="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20">
+        </form>
+    </div>
+
+    <!-- Tableau des clients -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50/50 border-b border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        <th class="px-6 py-4">{% trans "Client" %}</th>
+                        <th class="px-6 py-4">{% trans "Contact" %}</th>
+                        <th class="px-6 py-4 text-center">{% trans "Devis" %}</th>
+                        <th class="px-6 py-4 text-center">{% trans "Maintenances" %}</th>
+                        <th class="px-6 py-4">{% trans "Date création" %}</th>
+                        <th class="px-6 py-4 text-right">{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    {% for client in clients %}
+                    <tr class="hover:bg-slate-50/50 transition-colors group">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                                    {{ client.nom|slice:":2"|upper }}
+                                </div>
+                                <div>
+                                    <p class="font-black text-slate-800 text-sm">{{ client.nom }}</p>
+                                    <p class="text-[10px] text-slate-400">{{ client.email }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-sm text-slate-600">
+                                <i class="fas fa-phone mr-1 text-slate-300"></i> {{ client.telephone }}
+                            </p>
+                            {% if client.adresse %}
+                            <p class="text-[10px] text-slate-400 mt-1">
+                                <i class="fas fa-map-marker-alt mr-1"></i> {{ client.adresse|truncatechars:30 }}
+                            </p>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold">
+                                <i class="fas fa-file-invoice"></i> {{ client.total_devis }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-50 text-green-600 text-xs font-bold">
+                                <i class="fas fa-tools"></i> {{ client.total_maintenance.count }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-xs text-slate-500">{{ client.date_creation|date:"d/m/Y" }}</p>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2 transition-opacity">
+                                    <a href="{% url 'client_detail' client.pk %}" 
+                                    class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center shadow-sm"
+                                    title="{% trans 'Voir détails' %}">
+                                        <i class="fas fa-eye text-xs"></i>
+                                    </a>
+                                    <a href="{% url 'client_edit' client.pk %}" 
+                                    class="w-8 h-8 rounded-full bg-green-50 text-green-600 hover:bg-green-600 hover:text-white transition-all flex items-center justify-center shadow-sm"
+                                    title="{% trans 'Modifier' %}">
+                                        <i class="fas fa-edit text-xs"></i>
+                                    <a href="{% url 'client_delete' client.pk %}" 
+                                    class="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-600 hover:text-white transition flex items-center justify-center shadow-sm"
+                                    onclick="return confirm('{% trans "Attention : Cette action supprimera définitivement le client. Continuer ?" %}')">
+                                        <i class="fas fa-trash text-xs"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-400 italic text-sm">
+                            <i class="fas fa-users text-4xl mb-2 block"></i>
+                            {% trans "Aucun client trouvé" %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if clients.has_other_pages %}
+        <div class="px-6 py-4 border-t flex justify-between items-center">
+            <div class="text-sm text-slate-500">
+                {% trans "Page" %} {{ clients.number }} {% trans "sur" %} {{ clients.paginator.num_pages }}
+            </div>
+            <div class="flex gap-2">
+                {% if clients.has_previous %}
+                    <a href="?page=1{% if query %}&q={{ query }}{% endif %}" 
+                       class="px-3 py-1 border rounded-lg hover:bg-slate-50 transition text-sm">«</a>
+                    <a href="?page={{ clients.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" 
+                       class="px-3 py-1 border rounded-lg hover:bg-slate-50 transition text-sm">‹</a>
+                {% endif %}
+                
+                <span class="px-3 py-1 border rounded-lg bg-slate-900 text-white text-sm">{{ clients.number }}</span>
+                
+                {% if clients.has_next %}
+                    <a href="?page={{ clients.next_page_number }}{% if query %}&q={{ query }}{% endif %}" 
+                       class="px-3 py-1 border rounded-lg hover:bg-slate-50 transition text-sm">›</a>
+                    <a href="?page={{ clients.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}" 
+                       class="px-3 py-1 border rounded-lg hover:bg-slate-50 transition text-sm">»</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    /* Animation pour les boutons d'action */
+    .group-hover\:opacity-100 {
+        transition: opacity 0.2s ease-in-out;
+    }
+    
+    /* Style du tableau responsive */
+    @media (max-width: 768px) {
+        .px-6 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .text-2xl {
+            font-size: 1.25rem;
+        }
+    }
+</style>
+{% endblock %}

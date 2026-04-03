@@ -85,7 +85,7 @@ def generate_pdf(request, pk):
     entreprise = Entreprise.objects.first()
     logo_path = finders.find('logo.png')
     
-    html_string = render_to_string('devis/pdf_template.html', {
+    html_string = render_to_string('pdf_template.html', {
         'devis': devis,
         'entreprise': entreprise,
         'sections': devis.sections.all(),
@@ -281,3 +281,68 @@ def devis_update(request, pk):
         "devis": devis,
         "devis_data": json.dumps(devis_data)
     })
+
+
+
+
+
+
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.db.models import Q
+from .models import Client
+from .forms import ClientForm
+
+# Liste et Recherche
+def client_list(request):
+    query = request.GET.get('q')
+    if query:
+        clients = Client.objects.filter(
+            Q(nom__icontains=query) | Q(email__icontains=query) | Q(telephone__icontains=query)
+        )
+    else:
+        clients = Client.objects.all()
+    return render(request, 'clients/client_list.html', {'clients': clients, 'query': query})
+
+# Création
+def client_create(request):
+    if request.method == 'POST':
+        form = ClientForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Le client a été ajouté avec succès.")
+            return redirect('client_list')
+    else:
+        form = ClientForm()
+    return render(request, 'clients/client_form.html', {'form': form, 'title': "Ajouter un client"})
+
+# Modification
+def client_edit(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+    if request.method == 'POST':
+        form = ClientForm(request.POST, instance=client)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Informations client mises à jour.")
+            return redirect('client_list')
+    else:
+        form = ClientForm(instance=client)
+    return render(request, 'clients/client_form.html', {'form': form, 'title': "Modifier le client"})
+
+# Détails (affiche aussi l'historique de ses devis)
+def client_detail(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+    devis_client = client.devis.all() # Utilise le related_name='devis' défini dans ton modèle
+    return render(request, 'clients/client_detail.html', {'client': client, 'devis_client': devis_client})
+
+# Suppression
+def client_delete(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+    if request.method == 'POST':
+        client.delete()
+        messages.warning(request, "Le client a été supprimé.")
+        return redirect('client_list')
+    return render(request, 'clients/client_confirm_delete.html', {'client': client})

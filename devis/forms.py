@@ -36,3 +36,20 @@ LigneFormSet = inlineformset_factory(
         'quantite': forms.NumberInput(attrs={'class': 'w-full p-2 border rounded text-center qte-field', 'onchange': 'updateRowTotal(this)'}),
     }
 )
+
+
+
+
+from django import forms
+from .models import Client
+
+class ClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['nom', 'email', 'telephone', 'adresse']
+        widgets = {
+            'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom complet'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'exemple@email.com'}),
+            'telephone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Numéro de téléphone'}),
+            'adresse': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Adresse physique'}),
+        }

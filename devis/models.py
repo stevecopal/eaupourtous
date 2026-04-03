@@ -24,9 +24,9 @@ class Client(models.Model):
         # On utilise le count() sur le set lié (devis_set)
         return self.devis.count()
 
-    # @property
-    # def total_maintenances(self):
-    #     return self.maintenance.count()
+    @property
+    def total_maintenances(self):
+        return self.maintenance.count()
 
     
 class Devis(models.Model):

@@ -86,6 +86,11 @@
             <a href="{% url 'maintenance_list' %}" class="sidebar-item {% if 'maintenance' in request.path %}active{% endif %}">
                 <i class="fas fa-calendar-alt w-6"></i>
                 <span>{% trans "Plan Maintenance" %}</span>
+
+            </a>
+            <a href="{% url 'client_list' %}" class="sidebar-item {% if 'client' in request.path %}active{% endif %}">
+                <i class="fas fa-users w-6"></i>
+                <span>{% trans "Clients" %}</span>
             </a>
         </nav>
 

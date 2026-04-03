@@ -1,0 +1,252 @@
+{% extends "base_dashboard.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="p-6 bg-slate-50 min-h-screen">
+    <div class="max-w-3xl mx-auto">
+        <!-- En-tête -->
+        <div class="mb-8">
+            <div class="flex items-center gap-3 mb-2">
+                <a href="{% url 'client_list' %}" class="text-slate-400 hover:text-slate-600 transition">
+                    <i class="fas fa-arrow-left text-sm"></i>
+                </a>
+                <h1 class="text-2xl font-black text-slate-800 tracking-tight uppercase">
+                    {% if client %}
+                        <i class="fas fa-edit text-blue-500 mr-2"></i>
+                        {% trans "Modifier le client" %}
+                    {% else %}
+                        <i class="fas fa-user-plus text-blue-500 mr-2"></i>
+                        {% trans "Nouveau client" %}
+                    {% endif %}
+                    <span class="text-blue-600">.</span>
+                </h1>
+            </div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-8">
+                {% if client %}
+                    {% trans "Modification des informations du client" %}
+                {% else %}
+                    {% trans "Ajouter un nouveau client à la base" %}
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Formulaire -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <form method="post" class="space-y-0">
+                {% csrf_token %}
+                
+                <!-- Informations client -->
+                <div class="p-6 space-y-5">
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center">
+                            <i class="fas fa-info-circle text-blue-500 text-sm"></i>
+                        </div>
+                        <h2 class="text-sm font-black text-slate-700 uppercase tracking-wider">
+                            {% trans "Informations générales" %}
+                        </h2>
+                    </div>
+                    
+                    <!-- Nom -->
+                    <div>
+                        <label for="{{ form.nom.id_for_label }}" class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">
+                            {{ form.nom.label }} <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.nom }}
+                        {% if form.nom.errors %}
+                            <p class="text-red-500 text-xs mt-1">{{ form.nom.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Email -->
+                    <div>
+                        <label for="{{ form.email.id_for_label }}" class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">
+                            {{ form.email.label }} <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <p class="text-red-500 text-xs mt-1">{{ form.email.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Téléphone -->
+                    <div>
+                        <label for="{{ form.telephone.id_for_label }}" class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">
+                            {{ form.telephone.label }} <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.telephone }}
+                        {% if form.telephone.errors %}
+                            <p class="text-red-500 text-xs mt-1">{{ form.telephone.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Adresse -->
+                    <div>
+                        <label for="{{ form.adresse.id_for_label }}" class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">
+                            {{ form.adresse.label }}
+                        </label>
+                        {{ form.adresse }}
+                        <p class="text-[10px] text-slate-400 mt-1">{% trans "Adresse de facturation et de livraison" %}</p>
+                    </div>
+                </div>
+                
+                <!-- Statistiques si modification -->
+                {% if client %}
+                <div class="bg-slate-50/50 px-6 py-4 border-y border-slate-100">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center">
+                                <i class="fas fa-file-invoice text-blue-500 text-xs"></i>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-400 uppercase">{% trans "Devis" %}</p>
+                                <p class="text-sm font-black text-slate-700">{{ client.total_devis }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-xl bg-green-50 flex items-center justify-center">
+                                <i class="fas fa-tools text-green-500 text-xs"></i>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-400 uppercase">{% trans "Maintenances" %}</p>
+                                <p class="text-sm font-black text-slate-700">{{ client.total_maintenances }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Boutons d'action -->
+                <div class="px-6 py-5 bg-gradient-to-r from-slate-50 to-white border-t border-slate-100 flex flex-col sm:flex-row justify-end gap-3">
+                    <a href="{% url 'client_list' %}" 
+                       class="order-2 sm:order-1 text-center px-5 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition active:scale-95">
+                        <i class="fas fa-times mr-2"></i>
+                        {% trans "Annuler" %}
+                    </a>
+                    <button type="submit" 
+                            class="order-1 sm:order-2 px-6 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-md hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fas fa-save text-xs"></i>
+                        {% trans "Enregistrer le client" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Aide -->
+        <div class="mt-6 p-4 bg-blue-50/30 rounded-2xl border border-blue-100/50">
+            <div class="flex items-start gap-3">
+                <i class="fas fa-info-circle text-blue-400 text-sm mt-0.5"></i>
+                <div>
+                    <p class="text-[10px] font-bold text-blue-600 uppercase tracking-wider">{% trans "Information" %}</p>
+                    <p class="text-[11px] text-slate-600">
+                        {% trans "Les champs marqués d'un astérisque (*) sont obligatoires. L'adresse email doit être unique dans le système." %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Style des champs de formulaire */
+    input, textarea, select {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.75rem;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background-color: white;
+    }
+    
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    /* Style des labels */
+    label {
+        display: block;
+        margin-bottom: 0.375rem;
+    }
+    
+    /* Responsive mobile */
+    @media (max-width: 640px) {
+        input, textarea, select {
+            font-size: 16px !important;
+            padding: 0.6rem 0.875rem;
+        }
+        
+        .px-6 {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+        }
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .bg-white {
+        animation: fadeIn 0.3s ease-out;
+    }
+</style>
+
+<script>
+    // Amélioration du focus sur mobile
+    document.querySelectorAll('input, select, textarea').forEach(element => {
+        element.addEventListener('focus', function() {
+            if (window.innerWidth < 640) {
+                setTimeout(() => {
+                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            }
+        });
+    });
+    
+    // Validation en temps réel du téléphone
+    const phoneInput = document.querySelector('input[name="telephone"]');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9+]/g, '');
+        });
+    }
+    
+    // Validation email
+    const emailInput = document.querySelector('input[name="email"]');
+    if (emailInput) {
+        emailInput.addEventListener('blur', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email && !emailRegex.test(email)) {
+                this.style.borderColor = '#ef4444';
+                this.style.backgroundColor = '#fef2f2';
+            } else {
+                this.style.borderColor = '#e2e8f0';
+                this.style.backgroundColor = '#f8fafc';
+            }
+        });
+        
+        emailInput.addEventListener('focus', function() {
+            this.style.borderColor = '#e2e8f0';
+            this.style.backgroundColor = '#f8fafc';
+        });
+    }
+</script>
+{% endblock %}
