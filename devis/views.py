@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.contrib import messages
+from num2words import num2words
 from weasyprint import HTML
 from django.utils.translation import gettext as _
 from django.forms import inlineformset_factory
@@ -80,25 +81,33 @@ def devis_delete(request, pk):
     return render(request, 'devis/devis_confirm_delete.html', {'devis': devis})
 
 def generate_pdf(request, pk):
-    """Génération PDF A4 avec Header (P1) et Footer (Fin)"""
+    """Génération PDF avec montant en lettres"""
+    # 1. Récupération des données
     devis = get_object_or_404(Devis, pk=pk)
     entreprise = Entreprise.objects.first()
     logo_path = finders.find('logo.png')
+
+    # 2. Conversion du montant en lettres
+    # On convertit en int pour éviter les centimes, puis en majuscules
+    total_lettres = num2words(int(devis.total_ht), lang='fr').upper()
     
-    html_string = render_to_string('pdf_template.html', {
+    # 3. Rendu du template avec le contexte mis à jour
+    html_string = render_to_string('devis/pdf_template.html', {
         'devis': devis,
         'entreprise': entreprise,
         'sections': devis.sections.all(),
-        'logo_path': logo_path, 
+        'logo_path': logo_path,
+        'total_lettres': total_lettres,  # <--- NE PAS OUBLIER CETTE LIGNE
     })
 
+    # 4. Génération du PDF
     html = HTML(string=html_string, base_url=request.build_absolute_uri())
     pdf = html.write_pdf()
 
+    # 5. Réponse
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="Devis_{devis.reference}.pdf"'
     return response
-
 
 
 from django.db.models import Q

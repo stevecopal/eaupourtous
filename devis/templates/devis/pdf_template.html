@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,10 +8,10 @@
     <style>
         @page {
             size: A4;
-            margin: 1.5cm;
+            margin: 0.8cm;
             @bottom-center {
                 content: "Page " counter(page) " / " counter(pages);
-                font-size: 8pt;
+                font-size: 10pt;
                 color: #6c757d;
             }
         }
@@ -26,182 +27,180 @@
             font-size: 10pt;
             line-height: 1.4;
             color: #2c3e50;
-            background: transparent; /* Fond transparent pour voir le filigrane */
         }
 
-        /* FILIGRANE AGGRANDI ET TOUJOURS VISIBLE */
+        /* FILIGRANE */
         .watermark {
             position: fixed;
-            top: 25%;   /* Centrage vertical ajusté */
-            left: 10%;  /* Prend plus de largeur */
+            top: 25%;
+            left: 10%;
             width: 80%;
             height: auto;
-            opacity: 0.07; /* Légèrement plus visible mais discret */
+            opacity: 0.07;
             text-align: center;
-            display: block;
+            z-index: -1000;
         }
         
         .watermark img {
-            width: 100%; /* Aggrandissement maximum */
-            max-width: 6000px;
-            height: auto;
+            width: 100%;
+            max-width: 600px;
         }
 
-        .watermark-text {
-            font-size: 80pt;
-            font-weight: bold;
-            color: #000;
-            transform: rotate(-45deg);
-            margin-top: 200px;
-        }
-
-        /* EN-TÊTE */
+        /* NOUVEL EN-TÊTE RÉORGANISÉ */
         .header {
             margin-bottom: 20px;
-            border-bottom: 3px solid #1e3c72;
-            padding-bottom: 10px;
-            background: transparent;
+            border-bottom: 2px solid #1e3c72;
+            padding-bottom: 15px;
         }
         
-        .header-table { width: 100%; border: none; }
-        .logo-cell { width: 150px; }
-        .logo { max-width: 140px; max-height: 70px; }
-        .company-info { text-align: right; font-weight: bold; font-size: 15pt;}
-        .company-name { font-size: 16pt; font-weight: bolder; color: #1e3c72; text-transform: uppercase; }
-        .company-details { font-size: 11pt; color:rgba(71, 69, 69, 0.74)3; }
+        .header-table { width: 100%; border-collapse: collapse; }
+        
+        .header-left { width: 30%; text-align: left; font-size: 8pt; vertical-align: top; font-weight: bold; }
+        
+        .header-center { width: 40%; text-align: center; vertical-align: top; }
+        
+        .header-right { width: 30%; text-align: right; font-size: 8pt; vertical-align: top; font-weight: bold; }
 
-        /* TITRE */
-        .document-title { text-align: center; margin: 20px 0; }
-        .document-title h1 { font-size: 20pt; color: #1e3c72; border: 2px solid #1e3c72; display: inline-block; padding: 5px 20px; }
-        .document-title .objet { margin-top: 10px; font-weight: bold; font-size: 11pt; }
+        .company-name { 
+            font-size: 15pt; 
+            font-weight: bold; 
+            color: #164499; 
+            text-transform: uppercase;
+            display: block;
+        }
+        
+        .logo { max-width: 100px; max-height: 50px;  }
 
-        /* BLOCS INFOS (Transparents pour laisser voir le filigrane) */
+        /* TITRE & INFOS CLIENT */
+        .document-title { text-align: center; margin: 15px 0; }
+        .document-title h2 { font-size: 14pt; color: #1e3c72; text-transform: uppercase; margin-bottom: 5px; }
+        .ref-box { font-weight: bold; font-size: 12pt; color: #2c3e50; }
+
         .client-info {
-            padding: 15px;
+            padding: 10px;
+            border-left: 3px solid #1e3c72;
             margin-bottom: 20px;
-            border-left: 5px solid #1c0583;
-        }
-        
-        .info-grid { width: 100%; margin-top: 10px; }
-        .info-label { font-weight: bold; color: #6c757d; width: 120px; }
-
-        /* SECTIONS & TABLEAUX */
-        .section { margin-bottom: 10px; }
-        .section-title {
-           
-            color: black;
-            padding: 8px 12px;
-            font-weight: bolder;
-            font-size: 12pt;
-            border-radius: 2px;
-            text-align: center;
+            background: rgba(248, 249, 250, 0.5);
         }
 
+        /* TABLEAU DES ARTICLES */
         .items-table {
-            font-weight: bolder;
             width: 100%;
             border-collapse: collapse;
-            background: transparent; /* Fond transparent pour le tableau */
+            margin-bottom: 20px;
         }
         
         .items-table th {
-            background: rgba(233, 236, 239, 0.8); /* Semi-transparent */
+            background: #f8f9fa;
             border: 1px solid #dee2e6;
             padding: 8px;
-            font-size: 11pt;
-            font-weight: bolder;
+            font-size: 7pt;
+            text-transform: uppercase;
         }
         
         .items-table td {
             border: 1px solid #dee2e6;
-            padding: 7px;
-            font-size: 9pt;
-            background: rgba(255, 255, 255, 0.4); /* Très léger voile pour la lecture */
+            padding: 8px;
+            font-size: 12pt;
+            font-weight: bold;
         }
 
-        /* TOTAL BOX */
-        .total-section { margin-top: 20px; text-align: right; }
-        .total-box {
-            color: green;
-            padding: 10px 20px;
-            display: inline-block;
-            border-radius: 4px;
-            text-align: center;
+        /* TOTAL ET MONTANT EN LETTRES */
+        .total-container {
+            margin-top: 20px;
+            text-align: right;
         }
-        .total-box h2 { color: #15178f; font-size: 12pt; margin-top: 5px; }
+        
+        .total-box {
+            display: inline-block;
+            padding: 10px 20px;
+            min-width: 200px;
+        }
+
+        .montant-lettres {
+            font-style: italic;
+            font-weight: bold;
+            padding: 10px;
+            border-left: 2px solid #28a745;
+            background: #fdfdfd;
+        }
 
         /* SIGNATURE & FOOTER */
-        .signature-section { margin-top: 40px; }
-        .signature-box { border-top: 1px solid #2c3e50; width: 200px; margin-top: 50px; padding-top: 5px; font-size: 8pt; }
-        .conditions { font-size: 8pt; font-weight: bold; color: #2f3131; text-align: center; border-top: 1px dashed #bdc3c7; padding-top: 10px; }
+        .signature-section { margin-top: 30px; width: 100%; }
+        .signature-box { border-top: 1px solid #000; width: 180px; margin-top: 40px; padding-top: 5px; text-align: center; font-size: 9pt; }
         
+        .company-slogan {
+            font-size: 10pt;
+            color: #6c757d;
+            font-style: italic;
+        }
+
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         .font-bold { font-weight: bold; }
     </style>
 </head>
 <body>
+
     <div class="watermark">
         {% if entreprise.logo %}
             <img src="{% static 'logo.webp' %}" alt="Filigrane">
         {% else %}
-            <div class="watermark-text">{{ entreprise.nom }}</div>
+            <div style="font-size: 60pt; font-weight: bold; color: #ccc; transform: rotate(-45deg);">{{ entreprise.nom }}</div>
         {% endif %}
     </div>
 
     <div class="header">
         <table class="header-table">
             <tr>
-                <td class="logo-cell">
+                <td class="header-left">
+                    <strong>LOCALISATION     :</strong> {{ entreprise.adresse|default:"N/A" }}<br><br>
+                    <strong>TEL :</strong> {{ entreprise.telephone|default:"N/A" }}<br><br>
+                    <strong>EMAIL :</strong> {{ entreprise.email|default:"N/A" }}
+                </td>
+
+                <td class="header-center">
+                    <span class="company-name">{{ entreprise.nom }}</span><br>
                     {% if entreprise.logo %}
                         <img src="{% static 'logo.webp' %}" class="logo">
-                    {% endif %}
+                    {% endif %}<br>
+                    <span class="company-slogan">{{ entreprise.slogan|default:"Votre partenaire de confiance" }}</span>
                 </td>
-                <td class="company-info">
-                    <div class="company-name">{{ entreprise.nom }}</div>
-                    <div class="company-details">
-                        {{ entreprise.adresse|default:"" }}<br>
-                        {% if entreprise.telephone %} {{ entreprise.telephone }}{% endif %}<br>
-                        {% if entreprise.email %}  {{ entreprise.email }}{% endif %}
-                    </div>
+
+                <td class="header-right">
+                    <strong>SITE WEB :</strong> {{ entreprise.site_web|default:"N/A" }}<br><br>
+                    <strong>NIU :</strong> {{ entreprise.niu|default:"M022118476119T" }}<br><br>
+                    <strong>RCCM :</strong> {{ entreprise.rccm|default:"RC/DLN/2021/B/443" }}
                 </td>
             </tr>
         </table>
     </div>
 
-    <div class="">
-        <h2 class="document-title">OBJET : {{ devis.objet|upper }}</h2>
-        <div class="document-title">
-            <div class="objet">DEVIS N° {{ devis.reference }}</div>
+    <div class="document-title">
+        <h2>OBJET : {{ devis.objet|upper }}</h2>
+        <div class="ref-box">DEVIS N° {{ devis.reference }}</div>
     </div>
 
     <div class="client-info">
-        <table style="width: 100%;">
-            <tr>
-                <td style="width: 50%; vertical-align: top;font-size: 13pt; font-weight: bolder;">
-                    <strong>CLIENT :</strong><br>
-                    <span style="font-size: 13pt; font-weight: bolder;">{{ devis.client.nom }}</span><br>
-                    {{ devis.client.adresse|default:"" }}
-                    <span style="display: block; margin-top: 5px;">
-                        {% if devis.client.telephone %} {{ devis.client.telephone }}{% endif %}
-                        {% if devis.client.email %}<br> {{ devis.client.email }}{% endif %}
-                </td>
-                
-            </tr>
-        </table>
+        <div style="font-size: 11pt; margin-bottom: 5px; text-decoration: underline;"><strong>CLIENT :</strong></div>
+        <strong>NOM :</strong> {{ devis.client.nom }}<br>
+        <strong>ADRESSE :</strong> {{ devis.client.adresse|default:"-" }}<br>
+        <strong>TELEPHONE :</strong> {{ devis.client.telephone|default:"-" }}
     </div>
 
     {% for section in sections %}
     <div class="section">
-        <div class="section-title">{{ section.titre }}</div>
+        <div style="background: #e9ecef; padding: 5px; font-weight: bold; border: 1px solid #dee2e6; font-size:12pt;">
+            {{ section.titre }}
+        </div>
         <table class="items-table">
             <thead>
                 <tr>
                     <th style="text-align: left;">Désignation</th>
-                    <th style="width: 40px;">Unité</th>
-                    <th style="width: 80px; text-align: right;">P.U (FCFA)</th>
-                    <th style="width: 40px;">Qté</th>
-                    <th style="width: 90px; text-align: right;">Montant</th>
+                    <th style="width: 10%;">Unité</th>
+                    <th style="width: 15%; text-align: right;">P.U (FCFA)</th>
+                    <th style="width: 8%;">Qté</th>
+                    <th style="width: 18%; text-align: right;">Montant</th>
                 </tr>
             </thead>
             <tbody>
@@ -209,9 +208,9 @@
                 <tr>
                     <td>{{ ligne.designation }}</td>
                     <td class="text-center">{{ ligne.unite }}</td>
-                    <td class="text-right">{{ ligne.prix_unitaire|floatformat:0 }}</td>
-                    <td class="text-center">{{ ligne.quantite|floatformat:0 }}</td>
-                    <td class="text-right font-bold">{{ ligne.montant_ligne|floatformat:0 }}</td>
+                    <td class="text-right">{{ ligne.prix_unitaire|floatformat:0|intcomma }}</td>
+                    <td class="text-center">{{ ligne.quantite|floatformat:0}}</td>
+                    <td class="text-right font-bold">{{ ligne.montant_ligne|floatformat:0|intcomma }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -219,31 +218,31 @@
     </div>
     {% endfor %}
 
-    <div class="total-section">
+    <div class="total-container">
         <div class="total-box">
-            <p>TOTAL GÉNÉRAL HT</p>
-            <h2>{{ devis.total_ht|floatformat:0 }} FCFA</h2>
+            <span style="font-size: 12pt; font-weight: bold;">TOTAL GÉNÉRAL HT : {{ devis.total_ht|floatformat:0|intcomma }} FCFA</span><br>
         </div>
     </div>
 
-    <table style="width: 100%; margin-top: 50px;">
+    <div class="montant-lettres">
+        Arrêté le présent devis à la somme de : <span style="text-transform: uppercase;">{{ total_lettres }} Francs CFA</span>
+    </div>
+
+    <table style="width: 100%; margin-top: 40px;">
         <tr>
-            <td style="width: 60%;">
-                <div style="font-size: 10pt; font-weight: bold; color: #313335;">
-                    Fait à {{ entreprise.ville|default:"douala" }}, le {{ devis.date_creation|date:"d/m/Y" }}
-                </div>
+            <td style="width: 60%; vertical-align: top;">
+                <strong>Fait à {{ entreprise.ville|default:"Douala" }}, le {{ devis.date_creation|date:"d/m/Y" }}</strong>
             </td>
-            <td style="width: 40%;">
-                <div class="signature-box text-center">
+            <td style="width: 40%; text-align: center;">
+                <div style="margin-bottom: 60px;"><strong>Le Responsable</strong></div>
+                <div style="border-top: 1px solid #000; width: 200px; margin: 0 auto; padding-top: 5px;">
                     Cachet et Signature
                 </div>
             </td>
         </tr>
     </table>
 
-    <div class="conditions">
-        {{ entreprise.nom }} -  {{ entreprise.slogan|default:"..." }} <br>
-        Devis valable . Merci pour votre confiance.
-    </div>
+    
+
 </body>
 </html>

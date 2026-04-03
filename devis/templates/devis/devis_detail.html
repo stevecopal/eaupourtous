@@ -1,4 +1,5 @@
 {% extends "base_dashboard.html" %}
+{% load humanize %}
 {% load i18n %}
 {% load static %}
 
@@ -23,9 +24,7 @@
             <a href="{% url 'generate_pdf' devis.pk %}" target="_blank" class="bg-blue-700 text-white px-5 py-2.5 rounded-xl hover:bg-blue-800 font-bold shadow-lg transition">
                 <i class="fas fa-file-pdf mr-2"></i> {% trans "Télécharger PDF" %}
             </a>
-            <button onclick="window.print()" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-black font-bold shadow-lg transition">
-                <i class="fas fa-print mr-2"></i> {% trans "Imprimer" %}
-            </button>
+            
         </div>
     </div>
 
@@ -98,9 +97,9 @@
                         <tr class="hover:bg-slate-50/50 transition-colors">
                             <td class="py-4 px-2 font-bold text-slate-800">{{ ligne.designation }}</td>
                             <td class="py-4 px-2 text-center font-bold text-slate-500 uppercase italic text-xs">{{ ligne.unite }}</td>
-                            <td class="py-4 px-2 text-right font-black text-slate-700">{{ ligne.prix_unitaire|floatformat:0 }}</td>
-                            <td class="py-4 px-2 text-center font-black text-slate-900">{{ ligne.quantite|floatformat:0 }}</td>
-                            <td class="py-4 px-2 text-right font-black text-slate-900">{{ ligne.montant_ligne|floatformat:0 }}</td>
+                            <td class="py-4 px-2 text-right font-black text-slate-700">{{ ligne.prix_unitaire|floatformat:0|intcomma }}</td>
+                            <td class="py-4 px-2 text-center font-black text-slate-900">{{ ligne.quantite|floatformat:0|intcomma }}</td>
+                            <td class="py-4 px-2 text-right font-black text-slate-900">{{ ligne.montant_ligne|floatformat:0|intcomma }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -116,7 +115,7 @@
                     <div class="border-t-4 border-slate-900 pt-4 px-2">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-slate-400 text-[10px] font-black uppercase">{% trans "TOTAL GÉNÉRAL HT" %}</span>
-                            <span class="text-3xl font-black text-slate-900 tabular-nums">{{ devis.total_ht|floatformat:0 }} <small class="text-xs">FCFA</small></span>
+                            <span class="text-3xl font-black text-slate-900 tabular-nums">{{ devis.total_ht|floatformat:0|intcomma }} <small class="text-xs"></small></span>
                         </div>
                     </div>
                 </div>

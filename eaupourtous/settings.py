@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'devis',
     'maintenance',
     "django_celery_beat",
+    'django.contrib.humanize',
 ]
 
 SITE_ID = 1
@@ -205,3 +206,7 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(hour=8, minute=0),  # Chaque jour à 8h
     },
 }
+
+USE_L10N = True
+USE_THOUSANDS_SEPARATOR = True
+NUMBER_GROUPING = 3
