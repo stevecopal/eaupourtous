@@ -4,74 +4,68 @@
 {% block title %}{% trans "Intervention" %} #{{ maintenance.reference }}{% endblock %}
 
 {% block content %}
-<div class="p-6 bg-slate-50 min-h-screen">
+<div class="p-4 sm:p-8 bg-slate-50 min-h-screen">
     <div class="max-w-5xl mx-auto">
         
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-6">
-            <div class="flex items-center gap-4">
-                <a href="{% url 'maintenance_list' %}" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 transition shadow-sm">
-                    <i class="fas fa-arrow-left text-xs"></i>
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+            <div class="flex items-center gap-5">
+                <a href="{% url 'maintenance_list' %}" class="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-[#1E3C72] hover:border-[#1E3C72] transition-all shadow-sm group">
+                    <i class="fas fa-chevron-left group-hover:-translate-x-1 transition-transform"></i>
                 </a>
                 <div>
                     <div class="flex items-center gap-3">
-                        <h1 class="text-2xl font-black text-slate-800 tracking-tight uppercase">{{ maintenance.titre }}</h1>
-                        <span class="px-3 py-1 text-[10px] font-black uppercase rounded-full 
-                            {% if maintenance.statut == 'planifiee' %}bg-blue-50 text-blue-600 border border-blue-100
-                            {% elif maintenance.statut == 'terminee' %}bg-green-50 text-green-600 border border-green-100
-                            {% else %}bg-slate-100 text-slate-500{% endif %}">
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tighter uppercase">{{ maintenance.titre }}</h1>
+                        <span class="px-3 py-1 text-[10px] font-black uppercase rounded-lg border
+                            {% if maintenance.statut == 'planifiee' %}bg-blue-50 text-blue-600 border-blue-100
+                            {% elif maintenance.statut == 'terminee' %}bg-emerald-50 text-emerald-600 border-emerald-100
+                            {% else %}bg-slate-100 text-slate-500 border-slate-200{% endif %}">
                             {{ maintenance.get_statut_display }}
                         </span>
                     </div>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{% trans "Référence" %}: <span class="font-mono text-slate-600">{{ maintenance.reference }}</span></p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">
+                        {% trans "Réf" %}: <span class="text-[#0EA5E9]">{{ maintenance.reference }}</span>
+                    </p>
                 </div>
             </div>
 
-            <div class="flex gap-3 w-full md:w-auto">
-                <a href="{% url 'maintenance_send_reminder' maintenance.pk %}" class="flex-1 md:flex-none bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl font-bold text-sm shadow-sm hover:bg-slate-50 transition text-center" onclick="return confirm('{% trans "Envoyer un rappel ?" %}')">
-                    <i class="fas fa-bell mr-2 text-yellow-500"></i> {% trans "Rappel" %}
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <a href="{% url 'maintenance_update' maintenance.pk %}" class="flex-1 md:flex-none bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-xl font-bold text-sm hover:bg-slate-50 transition shadow-sm flex items-center justify-center gap-2">
+                    <i class="fas fa-pen text-[#0EA5E9]"></i> {% trans "Modifier" %}
                 </a>
-                <a href="{% url 'maintenance_update' maintenance.pk %}" class="flex-1 md:flex-none bg-slate-900 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg hover:bg-black transition text-center">
-                    <i class="fas fa-edit mr-2 text-blue-400"></i> {% trans "Modifier" %}
-                </a>
-                <button onclick="confirmDelete()" class="w-10 h-10 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center">
+                <button onclick="confirmDelete()" class="w-12 h-12 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center shadow-sm">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
         </div>
 
-        {% if maintenance.est_en_retard %}
-        <div class="mb-8 bg-red-50 border border-red-100 p-4 rounded-2xl flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white shrink-0 animate-pulse">
-                <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <div>
-                <p class="text-sm font-black text-red-900 uppercase tracking-tight">{% trans "Intervention en retard" %}</p>
-                <p class="text-xs text-red-700 font-bold">{% trans "Échéance dépassée le" %} {{ maintenance.date_maintenance|date:"d/m/Y à H:i" }}</p>
-            </div>
-        </div>
-        {% endif %}
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <div class="lg:col-span-2 space-y-8">
                 
                 <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="p-6 border-b border-slate-50 bg-slate-50/50">
-                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{% trans "Détails de la mission" %}</h3>
+                    <div class="px-8 py-6 border-b border-slate-50 flex justify-between items-center">
+                        <h3 class="text-xs font-black text-[#1E3C72] uppercase tracking-widest">{% trans "Fiche d'intervention" %}</h3>
+                        <i class="fas fa-file-invoice text-slate-200 text-xl"></i>
                     </div>
                     <div class="p-8">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                             <div>
-                                <label class="text-[10px] font-black text-slate-300 uppercase tracking-widest block mb-1">{% trans "Type" %}</label>
-                                <p class="text-sm font-black text-slate-700 uppercase">{{ maintenance.get_type_maintenance_display }}</p>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{% trans "Type de Service" %}</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-[#0EA5E9]"></span>
+                                    <p class="font-black text-slate-800 uppercase tracking-tight">{{ maintenance.get_type_maintenance_display }}</p>
+                                </div>
                             </div>
                             <div>
-                                <label class="text-[10px] font-black text-slate-300 uppercase tracking-widest block mb-1">{% trans "Lieu d'intervention" %}</label>
-                                <p class="text-sm font-bold text-slate-700"><i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>{{ maintenance.lieu }}</p>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{% trans "Lieu exact" %}</p>
+                                <p class="font-bold text-slate-700 flex items-center gap-2">
+                                    <i class="fas fa-location-dot text-red-400"></i> {{ maintenance.lieu }}
+                                </p>
                             </div>
                             <div class="md:col-span-2">
-                                <label class="text-[10px] font-black text-slate-300 uppercase tracking-widest block mb-2">{% trans "Actions à réaliser" %}</label>
-                                <div class="bg-slate-50 rounded-2xl p-6 text-sm text-slate-600 font-medium leading-relaxed border border-slate-100">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{% trans "Actions & Diagnostic" %}</p>
+                                <div class="bg-slate-50 rounded-2xl p-6 text-sm text-slate-600 font-medium leading-relaxed border border-slate-100 relative">
+                                    <i class="fas fa-quote-left absolute top-4 right-4 text-slate-200"></i>
                                     {{ maintenance.actions_a_realiser|linebreaks }}
                                 </div>
                             </div>
@@ -79,75 +73,49 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">{% trans "Équipement" %}</h3>
-                        <p class="text-sm font-bold text-slate-700 uppercase tracking-tight">{{ maintenance.equipement|default:"-" }}</p>
-                    </div>
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">{% trans "Pièces prévues" %}</h3>
-                        <p class="text-sm font-medium text-slate-600 leading-relaxed">{{ maintenance.pieces_detachees|default:"Aucune pièce listée" }}</p>
-                    </div>
-                </div>
+                
             </div>
 
-            <div class="space-y-8">
+            <div class="space-y-6">
                 
-                <div class="bg-slate-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
-                    <i class="fas fa-user-circle absolute -right-4 -top-4 text-8xl opacity-10"></i>
-                    <h3 class="text-[10px] font-black opacity-50 uppercase tracking-widest mb-6">{% trans "Client Concerné" %}</h3>
-                    <p class="text-xl font-black uppercase mb-4">{{ maintenance.client.nom }}</p>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3 text-sm font-bold opacity-80">
-                            <i class="fas fa-phone text-blue-400 w-4"></i> {{ maintenance.client.telephone|default:"N/A" }}
-                        </div>
-                        <div class="flex items-center gap-3 text-sm font-bold opacity-80">
-                            <i class="fas fa-envelope text-blue-400 w-4"></i> {{ maintenance.client.email|default:"N/A" }}
+                <div class="bg-[#1E3C72] rounded-3xl p-8 text-white shadow-xl relative overflow-hidden group">
+                    <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:bg-[#0EA5E9]/20 transition-all"></div>
+                    <p class="text-[10px] font-black text-blue-200 uppercase tracking-widest mb-6">{% trans "Client" %}</p>
+                    <h4 class="text-2xl font-black uppercase leading-tight mb-6">{{ maintenance.client.nom }}</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 text-sm font-bold text-blue-100/80">
+                            <i class="fas fa-phone-alt text-[#0EA5E9]"></i> {{ maintenance.client.telephone|default:"---" }}
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">{% trans "Date de passage" %}</h3>
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-blue-50 flex flex-col items-center justify-center border border-blue-100 shrink-0">
-                            <span class="text-[10px] font-black text-blue-400 uppercase">{{ maintenance.date_maintenance|date:"M" }}</span>
-                            <span class="text-lg font-black text-blue-700 leading-none">{{ maintenance.date_maintenance|date:"d" }}</span>
+                <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">{% trans "Planification" %}</p>
+                    <div class="flex items-center gap-5">
+                        <div class="text-center border-r border-slate-100 pr-5">
+                            <p class="text-3xl font-black text-[#1E3C72] leading-none">{{ maintenance.date_maintenance|date:"d" }}</p>
+                            <p class="text-[10px] font-black text-[#0EA5E9] uppercase mt-1">{{ maintenance.date_maintenance|date:"M" }}</p>
                         </div>
                         <div>
-                            <p class="text-sm font-black text-slate-800">{{ maintenance.date_maintenance|date:"H:i" }}</p>
-                            <p class="text-xs font-bold text-slate-400">{% trans "Durée est." %}: {{ maintenance.duree_estimee|default:"--" }}</p>
+                            <p class="text-xs font-bold text-slate-400 flex items-center gap-1">
+                                <i class="far fa-clock"></i> {{ maintenance.duree_estimee|default:"--" }}h
+                            </p>
                         </div>
                     </div>
-                </div>
-
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">{% trans "Suivi Notifications" %}</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-500 uppercase">{% trans "Client" %}</span>
-                            <i class="fas {% if maintenance.notification_envoyee_client %}fa-check-circle text-green-500{% else %}fa-circle text-slate-100{% endif %}"></i>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-500 uppercase">{% trans "Rappel J-1" %}</span>
-                            <i class="fas {% if maintenance.rappel_envoye %}fa-check-circle text-green-500{% else %}fa-circle text-slate-100{% endif %}"></i>
-                        </div>
+                    
+                    {% if maintenance.est_en_retard %}
+                    <div class="mt-6 flex items-center gap-2 text-red-500 bg-red-50 p-3 rounded-xl border border-red-100">
+                        <i class="fas fa-clock-rotate-left animate-pulse"></i>
+                        <span class="text-[10px] font-black uppercase">{% trans "En retard" %}</span>
                     </div>
+                    {% endif %}
                 </div>
 
+                <a href="{% url 'maintenance_send_reminder' maintenance.pk %}" class="w-full bg-[#0EA5E9]/10 text-[#0EA5E9] border border-[#0EA5E9]/20 p-4 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-[#0EA5E9] hover:text-white transition-all shadow-sm">
+                    <i class="fas fa-paper-plane"></i> {% trans "Envoyer rappel client" %}
+                </a>
             </div>
         </div>
-
-        {% if maintenance.notes_internes %}
-        <div class="bg-yellow-50/50 border border-yellow-100 rounded-3xl p-8">
-            <div class="flex items-center gap-3 mb-4">
-                <i class="fas fa-sticky-note text-yellow-600"></i>
-                <h3 class="text-[10px] font-black text-yellow-800 uppercase tracking-widest">{% trans "Notes Équipe" %}</h3>
-            </div>
-            <p class="text-sm text-yellow-900/70 font-medium leading-relaxed">{{ maintenance.notes_internes }}</p>
-        </div>
-        {% endif %}
-
     </div>
 </div>
 

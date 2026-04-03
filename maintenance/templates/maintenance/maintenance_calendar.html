@@ -5,84 +5,142 @@
 
 {% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+
 <style>
-    /* Personnalisation du calendrier pour coller au design épuré */
     :root {
-        --fc-border-color: #6f7377;
-        --fc-today-bg-color: #676e75;
-        --fc-button-bg-color: #0f348b;
-        --fc-button-border-color: #0f172a;
-        --fc-button-hover-bg-color: #a36a6a;
-        --fc-event-border-color: transparent;
+        --fc-border-color: #e2e8f0;
+        --fc-today-bg-color: #fefce8;
+        --fc-button-bg-color: #1e3c72;
+        --fc-button-border-color: #1e3c72;
+        --fc-button-hover-bg-color: #0f2a55;
+        --fc-button-active-bg-color: #4FB3B3;
     }
-    .fc { font-family: inherit; }
+
+    .fc {
+        font-family: inherit;
+        background: white;
+        border-radius: 20px;
+        padding: 10px;
+    }
+
     .fc-toolbar-title { 
         font-weight: 900 !important; 
         text-transform: uppercase; 
-        letter-spacing: -0.025em;
-        font-size: 1.25rem !important;
-        color: #737d8d;
+        letter-spacing: -0.04em;
+        font-size: 1.35rem !important;
+        color: #1e3c72;
     }
+
     .fc-button { 
         font-weight: 700 !important; 
-        text-transform: uppercase !important; 
-        font-size: 0.7rem !important;
-        border-radius: 0.75rem !important;
-        padding: 0.5rem 1rem !important;
+        text-transform: uppercase; 
+        font-size: 0.75rem !important;
+        border-radius: 12px !important;
+        padding: 0.55rem 1.1rem !important;
+        box-shadow: 0 2px 6px rgba(30, 60, 114, 0.15);
     }
+
+    .fc-button:hover {
+        background: #0f2a55 !important;
+        border-color: #0f2a55 !important;
+    }
+
     .fc-event {
-        padding: 2px 5px;
-        border-radius: 6px;
-        font-weight: 700;
-        font-size: 0.75rem;
-        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.8rem;
         border: none !important;
-        box-shadow: 0 2px 4px rgba(175, 20, 20, 0.05);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.2s ease;
     }
-    .fc-daygrid-day-number { font-weight: 800; color: #292a2c; font-size: 0.8rem; }
-    .fc-col-header-cell-cushion { font-weight: 900; text-transform: uppercase; font-size: 0.7rem; color: #3c3e41; }
+
+    .fc-event:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(30, 60, 114, 0.2);
+    }
+
+    .fc-daygrid-day-number { 
+        font-weight: 800; 
+        color: #1e3c72; 
+        font-size: 0.85rem; 
+    }
+
+    .fc-col-header-cell-cushion { 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        font-size: 0.75rem; 
+        color: #475569; 
+    }
+
+    .fc .fc-day-today {
+        background: #fefce8 !important;
+    }
+
+    /* Amélioration mobile */
+    @media (max-width: 768px) {
+        .fc-toolbar {
+            flex-direction: column;
+            gap: 12px;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="p-6 bg-slate-50 min-h-screen">
     
-    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div>
-            <h1 class="text-2xl font-black text-slate-800 tracking-tight uppercase">
-                {% trans "Planning" %} <span class="text-blue-600">.</span>
-            </h1>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{% trans "Vue temporelle des maintenances" %}</p>
-        </div>
-        <div class="flex gap-3">
-            <a href="{% url 'maintenance_list' %}" class="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl font-bold text-sm shadow-sm hover:bg-slate-50 transition">
-                <i class="fas fa-list mr-2 text-slate-400"></i> {% trans "Vue Liste" %}
-            </a>
-            <a href="{% url 'maintenance_create' %}" class="bg-slate-900 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg hover:bg-black transition">
-                <i class="fas fa-plus mr-2 text-blue-400"></i> {% trans "Nouvelle intervention" %}
-            </a>
-        </div>
-    </div>
+    <div class="max-w-7xl mx-auto">
+        <!-- En-tête -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-black text-slate-800 tracking-tight uppercase">
+                    Planning des Interventions 
+                    <span class="text-[#4FB3B3]">.</span>
+                </h1>
+                <p class="text-sm font-medium text-slate-500 mt-1">
+                    Vue calendrier des maintenances programmées
+                </p>
+            </div>
 
-    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-        <div id="calendar"></div>
+            <div class="flex gap-3">
+                <a href="{% url 'maintenance_list' %}" 
+                   class="bg-white border border-slate-200 text-green-700 px-5 py-3 rounded-2xl font-bold text-sm shadow-sm hover:bg-slate-50 hover:border-slate-300 transition flex items-center gap-2">
+                    <i class="fas fa-list text-slate-400"></i> 
+                    Vue Liste
+                </a>
+                
+                <a href="{% url 'maintenance_create' %}" 
+                   class="bg-[#1e3c72] text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-lg hover:bg-[#0f2a55] transition flex items-center gap-2">
+                    <i class="fas fa-plus"></i> 
+                    Nouvelle intervention
+                </a>
+            </div>
+        </div>
+
+        <!-- Calendrier -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-4 md:p-8">
+            <div id="calendar" class="rounded-2xl"></div>
+        </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
+    
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'fr',
         initialView: 'dayGridMonth',
         headerToolbar: {
-            left: 'today prev,next',
+            left: 'prev,today,next',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek'
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
-        // Données dynamiques envoyées depuis Django
+        
         events: {{ events|safe }},
         
         eventClick: function(info) {
@@ -93,21 +151,28 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         
         height: 'auto',
-        firstDay: 1, // Commence le lundi
+        firstDay: 1,
         nowIndicator: true,
+        selectable: true,
+        editable: false,
+        
         buttonText: {
-            today: "{% trans 'Aujourd’hui' %}",
-            month: "{% trans 'Mois' %}",
-            week: "{% trans 'Semaine' %}"
+            today: "Aujourd’hui",
+            month: "Mois",
+            week: "Semaine",
+            day: "Jour"
         },
-        // Style des événements selon le type ou statut (à gérer côté Python dans la liste 'events')
+        
         eventDidMount: function(info) {
-            // Exemple : si c'est urgent, on peut forcer une bordure gauche
-            if (info.event.extendedProps.type === 'urgente') {
-                info.el.style.borderLeft = "4px solid #ef4444";
+            if (info.event.extendedProps.statut === 'urgent' || info.event.extendedProps.type === 'urgente') {
+                info.el.style.borderLeft = "5px solid #ef4444";
+            }
+            if (info.event.extendedProps.statut === 'termine') {
+                info.el.style.opacity = "0.75";
             }
         }
     });
+
     calendar.render();
 });
 </script>

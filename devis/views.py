@@ -7,6 +7,10 @@ from num2words import num2words
 from weasyprint import HTML
 from django.utils.translation import gettext as _
 from django.forms import inlineformset_factory
+
+import devis
+import maintenance
+from maintenance.models import Maintenance
 from .models import Devis, LigneDevis, SectionDevis
 from .forms import DevisForm, SectionForm, LigneFormSet
 from eau.models import Entreprise
@@ -110,7 +114,7 @@ def generate_pdf(request, pk):
     return response
 
 
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.views.generic import ListView, DetailView
 
 # --- 1. LISTE DES DEVIS (AVEC RECHERCHE ET FILTRE) ---
@@ -344,9 +348,39 @@ def client_edit(request, pk):
 # Détails (affiche aussi l'historique de ses devis)
 def client_detail(request, pk):
     client = get_object_or_404(Client, pk=pk)
-    devis_client = client.devis.all() # Utilise le related_name='devis' défini dans ton modèle
-    return render(request, 'clients/client_detail.html', {'client': client, 'devis_client': devis_client})
 
+    # Récupération des devis du client
+    devis_client = client.devis.all().order_by('-date_creation')  # Les plus récents en premier
+
+    # Calcul des statistiques
+    stats = {
+        'total_devis': devis_client.count(),
+        'montant_total_devis': devis_client.aggregate(
+            total=Sum('total_ht')
+        )['total'] or 0,
+        
+        'devis_acceptes': devis_client.count(),
+        
+        'total_maintenances': Maintenance.objects.filter(
+            client=client
+        ).count(),
+    }
+
+    # Calcul du taux de fidélité (optionnel mais recommandé)
+    if stats['total_devis'] > 0:
+        stats['taux_fidelite'] = round(
+            (stats['devis_acceptes'] / stats['total_devis']) * 100, 1
+        )
+    else:
+        stats['taux_fidelite'] = 0
+
+    context = {
+        'client': client,
+        'devis': devis_client,           # ← Correspond au template que je t'ai donné
+        'stats': stats,
+    }
+
+    return render(request, 'clients/client_detail.html', context)
 # Suppression
 def client_delete(request, pk):
     client = get_object_or_404(Client, pk=pk)

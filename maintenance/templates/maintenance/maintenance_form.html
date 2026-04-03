@@ -5,75 +5,53 @@
 
 {% block content %}
 <div class="p-6 bg-slate-50 min-h-screen">
-    <div class="max-w-5xl mx-auto">
-        <!-- En-tête -->
+    <div class="max-w-4xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
                 <h1 class="text-2xl font-black text-slate-800 tracking-tight uppercase">
                     {% if maintenance %}
-                        <i class="fas fa-edit text-blue-500 mr-2"></i>
+                        <i class="fas fa-edit text-blue-600 mr-2"></i>
                         {% trans "Modifier l'intervention" %}
                     {% else %}
-                        <i class="fas fa-plus-circle text-blue-500 mr-2"></i>
+                        <i class="fas fa-plus-circle text-blue-600 mr-2"></i>
                         {% trans "Nouvelle intervention" %}
                     {% endif %}
-                    <span class="text-blue-600">.</span>
                 </h1>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
                     {% trans "Fiche technique de maintenance" %}
                 </p>
-                {% if maintenance %}
-                <div class="mt-2 inline-flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full">
-                    <i class="fas fa-hashtag text-slate-400 text-xs"></i>
-                    <span class="text-xs font-mono font-bold text-slate-600">{{ maintenance.reference }}</span>
-                </div>
-                {% endif %}
             </div>
             <a href="{% url 'maintenance_list' %}" 
                class="text-slate-500 hover:text-slate-700 transition flex items-center gap-2 text-sm font-bold">
                 <i class="fas fa-arrow-left"></i>
-                {% trans "Retour à la liste" %}
+                {% trans "Retour" %}
             </a>
         </div>
 
-        <!-- Formulaire -->
         <form method="post" class="space-y-6">
             {% csrf_token %}
             
-            <!-- Section 1: Informations générales -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
+                <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
                     <h2 class="text-sm font-black text-slate-700 uppercase tracking-wider">
-                        <i class="fas fa-info-circle text-blue-500 mr-2"></i>
-                        {% trans "Informations générales" %}
+                        <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                        {% trans "Détails de l'intervention" %}
                     </h2>
                 </div>
                 <div class="p-6 space-y-5">
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                            {{ form.client.label }} <span class="text-red-500">*</span>
-                        </label>
-                        {{ form.client }}
-                        {% if form.client.errors %}
-                            <p class="text-red-500 text-xs mt-1">{{ form.client.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                            {{ form.titre.label }} <span class="text-red-500">*</span>
-                        </label>
-                        {{ form.titre }}
-                        {% if form.titre.errors %}
-                            <p class="text-red-500 text-xs mt-1">{{ form.titre.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                            {{ form.description.label }}
-                        </label>
-                        {{ form.description }}
-                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="md:col-span-2">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
+                                {{ form.client.label }} <span class="text-red-500">*</span>
+                            </label>
+                            {{ form.client }}
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
+                                {{ form.titre.label }} <span class="text-red-500">*</span>
+                            </label>
+                            {{ form.titre }}
+                        </div>
                         <div>
                             <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
                                 {{ form.type_maintenance.label }} <span class="text-red-500">*</span>
@@ -82,19 +60,18 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                                {{ form.statut.label }}
+                                {{ form.lieu.label }} <span class="text-red-500">*</span>
                             </label>
-                            {{ form.statut }}
+                            {{ form.lieu }}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Section 2: Planification -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
+                <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
                     <h2 class="text-sm font-black text-slate-700 uppercase tracking-wider">
-                        <i class="fas fa-calendar-alt text-blue-500 mr-2"></i>
+                        <i class="fas fa-calendar-alt text-blue-600 mr-2"></i>
                         {% trans "Planification" %}
                     </h2>
                 </div>
@@ -105,124 +82,41 @@
                                 {{ form.date_maintenance.label }} <span class="text-red-500">*</span>
                             </label>
                             {{ form.date_maintenance }}
-                            {% if form.date_maintenance.errors %}
-                                <p class="text-red-500 text-xs mt-1">{{ form.date_maintenance.errors.0 }}</p>
-                            {% endif %}
                         </div>
                         <div>
                             <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                                {{ form.duree_estimee.label }}
+                                {% trans "Durée (Heures)" %}
                             </label>
                             {{ form.duree_estimee }}
-                            <p class="text-[10px] text-slate-400 mt-1">{% trans "Format: HH:MM:SS" %}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Section 3: Localisation et équipement -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
+                <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
                     <h2 class="text-sm font-black text-slate-700 uppercase tracking-wider">
-                        <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
-                        {% trans "Localisation et équipement" %}
-                    </h2>
-                </div>
-                <div class="p-6 space-y-5">
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                            {{ form.lieu.label }} <span class="text-red-500">*</span>
-                        </label>
-                        {{ form.lieu }}
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                            {{ form.equipement.label }} <span class="text-red-500">*</span>
-                        </label>
-                        {{ form.equipement }}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 4: Travaux -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
-                    <h2 class="text-sm font-black text-slate-700 uppercase tracking-wider">
-                        <i class="fas fa-wrench text-blue-500 mr-2"></i>
+                        <i class="fas fa-wrench text-blue-600 mr-2"></i>
                         {% trans "Travaux à réaliser" %}
                     </h2>
                 </div>
-                <div class="p-6 space-y-5">
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                            {{ form.actions_a_realiser.label }} <span class="text-red-500">*</span>
-                        </label>
-                        {{ form.actions_a_realiser }}
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                            {{ form.pieces_detachees.label }}
-                        </label>
-                        {{ form.pieces_detachees }}
-                        <p class="text-[10px] text-slate-400 mt-1">{% trans "Listez les pièces détachées nécessaires" %}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 5: Contact technique -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
-                    <h2 class="text-sm font-black text-slate-700 uppercase tracking-wider">
-                        <i class="fas fa-phone-alt text-blue-500 mr-2"></i>
-                        {% trans "Contact technique" %}
-                    </h2>
-                </div>
                 <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                                {{ form.contact_technique.label }}
-                            </label>
-                            {{ form.contact_technique }}
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                                {{ form.telephone_contact.label }}
-                            </label>
-                            {{ form.telephone_contact }}
-                        </div>
-                    </div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">
+                        {{ form.actions_a_realiser.label }} <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.actions_a_realiser }}
                 </div>
             </div>
 
-            <!-- Section 6: Notes internes -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
-                    <h2 class="text-sm font-black text-slate-700 uppercase tracking-wider">
-                        <i class="fas fa-lock text-blue-500 mr-2"></i>
-                        {% trans "Notes internes" %}
-                    </h2>
-                </div>
-                <div class="p-6">
-                    {{ form.notes_internes }}
-                    <p class="text-[10px] text-slate-400 mt-2">
-                        <i class="fas fa-lock mr-1"></i>
-                        {% trans "Visible uniquement par l'équipe interne" %}
-                    </p>
-                </div>
-            </div>
-
-            <!-- Boutons d'action -->
             <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4">
                 <a href="{% url 'maintenance_list' %}" 
-                   class="btn-mobile flex-1 sm:flex-none text-center px-6 py-3 border border-slate-200 rounded-xl font-bold text-slate-600 hover:bg-slate-50 transition active:scale-95">
-                    <i class="fas fa-times mr-2"></i>
+                   class="btn-mobile text-center px-6 py-3 border border-slate-200 rounded-xl font-bold text-slate-500 hover:bg-slate-100 transition">
                     {% trans "Annuler" %}
                 </a>
                 <button type="submit" 
-                        class="btn-mobile flex-1 sm:flex-none bg-slate-900 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-black transition-all active:scale-95">
+                        class="btn-mobile bg-blue-600 text-white px-10 py-3 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all active:scale-95">
                     <i class="fas fa-save mr-2"></i>
-                    {% trans "Enregistrer" %}
+                    {% trans "Enregistrer l'intervention" %}
                 </button>
             </div>
         </form>
@@ -230,7 +124,6 @@
 </div>
 
 <style>
-    /* Style des champs de formulaire */
     input, select, textarea {
         width: 100%;
         padding: 0.75rem 1rem;
@@ -243,52 +136,14 @@
     
     input:focus, select:focus, textarea:focus {
         outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         background-color: white;
     }
     
-    textarea {
-        resize: vertical;
-        min-height: 80px;
-    }
-    
-    /* Style spécifique pour datetime-local */
-    input[type="datetime-local"] {
-        padding: 0.65rem 1rem;
-    }
-    
-    /* Style des selects */
-    select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
-        background-position: right 0.75rem center;
-        background-repeat: no-repeat;
-        background-size: 1.25rem;
-        padding-right: 2.5rem;
-    }
-    
-    /* Style des boutons sur mobile */
     @media (max-width: 640px) {
-        .btn-mobile {
-            width: 100%;
-        }
-        input, select, textarea {
-            font-size: 16px !important;
-        }
+        .btn-mobile { width: 100%; }
+        input, select, textarea { font-size: 16px !important; }
     }
 </style>
-
-<script>
-    // Amélioration du focus sur mobile
-    document.querySelectorAll('input, select, textarea').forEach(element => {
-        element.addEventListener('focus', function() {
-            if (window.innerWidth < 640) {
-                setTimeout(() => {
-                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 300);
-            }
-        });
-    });
-</script>
 {% endblock %}

@@ -1,83 +1,131 @@
 {% extends "base_dashboard.html" %}
 {% load i18n %}
 
+{% block extra_css %}
+<style>
+    /* Polices et styles conformes au Dashboard */
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, label, .title-font { font-family: 'Outfit', sans-serif; }
+
+    /* Animation subtile pour les lignes */
+    .line-row { transition: all 0.2s ease; }
+    .line-row:hover { background-color: rgba(14, 165, 233, 0.04); }
+
+    /* Style des inputs du tableau */
+    .table-input {
+        background-color: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        transition: all 0.2s;
+    }
+    .table-input:focus {
+        background-color: #FFFFFF;
+        border-color: #0EA5E9;
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        outline: none;
+    }
+
+    /* Badge de numérotation */
+    .section-number {
+        background: #1E3C72;
+        box-shadow: 0 4px 6px rgba(30, 60, 114, 0.2);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mx-auto p-4">
-    <form method="post" id="devis-form">
+<div class="container mx-auto p-4 sm:p-8 max-w-7xl">
+    <form method="post" id="devis-form" class="space-y-6">
         {% csrf_token %}
         
-        <div class="bg-white p-4 rounded shadow mb-4">
-            <h1 class="text-2xl font-bold mb-4">
-                <i class="fas fa-edit text-blue-500 mr-2"></i>
-                {% trans "Modifier le Devis" %} {{ devis.reference }}
-            </h1>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="md:col-span-2">
-                    <label class="block font-bold mb-1">{% trans "Objet du Devis" %}</label>
-                    {{ form.objet }}
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <nav class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{% trans "Édition de document" %}</nav>
+                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">
+                    <i class="fas fa-file-signature text-[#0EA5E9] mr-2"></i>
+                    {% trans "Modifier le Devis" %} <span class="text-[#1E3C72]">{{ devis.reference }}</span>
+                </h1>
+            </div>
+            <div class="flex gap-3">
+                <a href="{% url 'devis_detail' devis.pk %}" class="px-6 py-3 rounded-xl font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 transition">
+                    {% trans "Annuler" %}
+                </a>
+                <button type="submit" class="bg-[#10B981] text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-600 transition shadow-lg shadow-emerald-900/20 flex items-center gap-2">
+                    <i class="fas fa-save"></i>
+                    {% trans "Mettre à jour" %}
+                </button>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-3">
+                    <label class="block text-xs font-black uppercase text-slate-500 mb-2 tracking-wider">{% trans "Objet du Devis" %}</label>
+                    {{ form.objet }} 
                 </div>
-                <div>
-                    <label class="block font-bold mb-1">{% trans "Client" %}</label>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-black uppercase text-slate-500 mb-2 tracking-wider">{% trans "Client" %}</label>
                     {{ form.client }}
                 </div>
                 <div>
-                    <label class="block font-bold mb-1">{% trans "Date de Validité" %}</label>
+                    <label class="block text-xs font-black uppercase text-slate-500 mb-2 tracking-wider">{% trans "Date de Validité" %}</label>
                     {{ form.date_validite }}
                 </div>
             </div>
         </div>
         
-        <div id="sections-container" class="space-y-4"></div>
+        <div id="sections-container" class="space-y-6"></div>
         
-        <div class="mt-4">
-            <button type="button" id="add-section" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                <i class="fas fa-plus"></i> {% trans "Ajouter une Section" %}
+        <div class="flex justify-center">
+            <button type="button" id="add-section" class="group flex items-center gap-3 bg-white border-2 border-dashed border-slate-200 px-8 py-4 rounded-2xl font-bold text-slate-500 hover:border-[#0EA5E9] hover:text-[#0EA5E9] transition-all w-full justify-center">
+                <i class="fas fa-plus-circle text-slate-300 group-hover:text-[#0EA5E9]"></i> 
+                {% trans "Ajouter une nouvelle section" %}
             </button>
         </div>
         
-        <div class="mt-4 bg-gray-800 text-white p-4 rounded">
-            <div class="flex justify-between items-center">
-                <span class="font-bold">{% trans "Total Général HT" %}</span>
-                <span id="grand-total" class="text-2xl font-bold">0</span>
-                <span>FCFA</span>
+        <div class="bg-[#1E3C72] text-white p-1 rounded-3xl shadow-2xl overflow-hidden mt-8">
+            <div class="bg-white/5 backdrop-blur-sm p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-5">
+                    <div class="w-16 h-16 rounded-2xl bg-[#0EA5E9]/20 flex items-center justify-center border border-white/10">
+                        <i class="fas fa-coins text-2xl text-[#0EA5E9]"></i>
+                    </div>
+                    <div>
+                        <p class="text-blue-200 text-[10px] font-black uppercase tracking-[0.2em] mb-1">{% trans "Estimation Financière" %}</p>
+                        <h4 class="text-xl font-extrabold tracking-tight">{% trans "TOTAL GÉNÉRAL HORS TAXES" %}</h4>
+                    </div>
+                </div>
+                
+                <div class="flex items-baseline gap-4 bg-black/20 px-8 py-4 rounded-2xl border border-white/5">
+                    <span id="grand-total" class="text-4xl sm:text-6xl font-black tracking-tighter">0</span>
+                    <span class="text-xl font-bold text-[#0EA5E9]">FCFA</span>
+                </div>
             </div>
-        </div>
-        
-        <div class="mt-4 flex gap-3">
-            <a href="{% url 'devis_detail' devis.pk %}" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">
-                {% trans "Annuler" %}
-            </a>
-            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
-                <i class="fas fa-save"></i> {% trans "Enregistrer les modifications" %}
-            </button>
         </div>
     </form>
 </div>
 
 <template id="ligne-template">
-    <tr class="line-row border-b">
-        <td class="py-2 pr-2">
+    <tr class="line-row border-b border-slate-50 group">
+        <td class="py-3 pr-2">
             <input type="text" name="designation" placeholder="Désignation..." 
-                   class="designation-input w-full border rounded p-2">
+                   class="designation-input w-full table-input rounded-xl p-3 text-sm font-medium">
         </td>
-        <td class="py-2 px-1 w-24">
+        <td class="py-3 px-1 w-24">
             <input type="text" name="unite" placeholder="Unité" value="u"
-                   class="w-full text-center border rounded p-2">
+                   class="w-full text-center table-input rounded-xl p-3 text-sm font-bold">
         </td>
-        <td class="py-2 px-1 w-32">
+        <td class="py-3 px-1 w-32">
             <input type="number" name="pu" value="0" step="0.01"
-                   class="pu-input w-full text-right border rounded p-2">
+                   class="pu-input w-full text-right table-input rounded-xl p-3 text-sm font-bold">
         </td>
-        <td class="py-2 px-1 w-24">
+        <td class="py-3 px-1 w-24">
             <input type="number" name="qte" value="1" step="0.01"
-                   class="qte-input w-full text-center border rounded p-2">
+                   class="qte-input w-full text-center table-input rounded-xl p-3 text-sm font-bold">
         </td>
-        <td class="py-2 pl-1 w-32 text-right">
-            <div class="flex items-center justify-end gap-2">
-                <span class="row-total font-bold">0</span>
-                <button type="button" class="remove-line text-red-500 hover:text-red-700">
-                    <i class="fas fa-trash"></i>
+        <td class="py-3 pl-1 w-40 text-right">
+            <div class="flex items-center justify-end gap-3">
+                <span class="row-total font-black text-[#1E3C72] text-base">0</span>
+                <button type="button" class="remove-line w-8 h-8 flex items-center justify-center rounded-full text-slate-300 hover:bg-red-50 hover:text-red-500 transition">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
         </td>
@@ -85,6 +133,7 @@
 </template>
 
 <script>
+// LOGIQUE JS CONSERVÉE À 100% (Juste mise à jour des classes CSS injectées)
 let sectionCounter = 0;
 const existingData = {{ devis_data|safe }};
 
@@ -92,7 +141,6 @@ function addLigne(sectionId, ligneData = null) {
     const tbody = document.getElementById(`lignes-${sectionId}`);
     const template = document.getElementById("ligne-template");
     const clone = template.content.cloneNode(true);
-    
     const rowIndex = tbody.children.length;
     
     if (ligneData) {
@@ -102,7 +150,6 @@ function addLigne(sectionId, ligneData = null) {
         clone.querySelector('.qte-input').value = ligneData.quantite || 1;
     }
     
-    // Renommer les champs avec les bons indices
     clone.querySelectorAll('input').forEach(input => {
         const oldName = input.getAttribute('name');
         if (oldName) {
@@ -120,44 +167,48 @@ function addSection(sectionData = null, lignesData = null, sectionIndex = null) 
     const sectionTitle = sectionData ? sectionData.titre : '';
     
     const sectionDiv = document.createElement('div');
-    sectionDiv.className = 'bg-white rounded shadow p-4 mb-4';
+    sectionDiv.className = 'section-card bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden';
     sectionDiv.setAttribute('data-section-id', sectionId);
     
     sectionDiv.innerHTML = `
-        <div class="flex justify-between items-center mb-3">
-            <div class="flex items-center gap-3 flex-1">
-                <span class="font-bold text-lg">${sectionIndex !== null ? parseInt(sectionIndex) + 1 : sectionCounter + 1}</span>
+        <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+            <div class="flex items-center gap-4 flex-1">
+                <span class="section-number flex items-center justify-center w-10 h-10 text-white rounded-xl text-sm font-black">
+                    ${sectionIndex !== null ? parseInt(sectionIndex) + 1 : sectionCounter + 1}
+                </span>
                 <input type="text" name="sections-${sectionId}-titre" 
                        value="${escapeHtml(sectionTitle)}"
                        placeholder="Titre de la section" 
-                       class="flex-1 border rounded p-2 font-bold">
+                       class="flex-1 bg-transparent border-none focus:ring-0 font-extrabold text-slate-800 text-lg placeholder:text-slate-300">
             </div>
-            <button type="button" class="remove-section text-red-500 hover:text-red-700 ml-2">
-                <i class="fas fa-trash"></i>
+            <button type="button" class="remove-section w-10 h-10 flex items-center justify-center rounded-xl bg-white text-slate-300 hover:text-red-500 shadow-sm transition">
+                <i class="fas fa-trash-alt"></i>
             </button>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="p-2 text-left">Désignation</th>
-                        <th class="p-2 text-center w-24">Unité</th>
-                        <th class="p-2 text-right w-32">P.U</th>
-                        <th class="p-2 text-center w-24">Qté</th>
-                        <th class="p-2 text-right w-32">Total</th>
-                    </tr>
-                </thead>
-                <tbody id="lignes-${sectionId}"></tbody>
-            </table>
-        </div>
-        <div class="mt-3 pt-3 border-t flex justify-between items-center">
-            <button type="button" onclick="addLigne(${sectionId})" class="text-blue-500 hover:text-blue-700">
-                <i class="fas fa-plus"></i> Ajouter une ligne
-            </button>
-            <div>
-                <span class="font-bold">Sous-total :</span>
-                <span class="section-subtotal font-bold ml-2">0</span>
-                <span>FCFA</span>
+        <div class="p-6">
+            <div class="overflow-x-auto">
+                <table class="w-full border-separate border-spacing-y-1">
+                    <thead>
+                        <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <th class="pb-3 text-left pl-3">Désignation</th>
+                            <th class="pb-3 text-center w-24">Unité</th>
+                            <th class="pb-3 text-right w-32">P.U</th>
+                            <th class="pb-3 text-center w-24">Qté</th>
+                            <th class="pb-3 text-right pr-3 w-40">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lignes-${sectionId}"></tbody>
+                </table>
+            </div>
+            <div class="mt-6 pt-6 border-t border-slate-50 flex justify-between items-center">
+                <button type="button" onclick="addLigne(${sectionId})" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 text-[#0EA5E9] text-xs font-bold hover:bg-[#0EA5E9] hover:text-white transition">
+                    <i class="fas fa-plus-circle"></i> Ajouter une prestation
+                </button>
+                <div class="bg-slate-50 px-6 py-3 rounded-2xl border border-slate-100">
+                    <span class="text-[10px] font-black text-slate-400 uppercase mr-3">Sous-total :</span>
+                    <span class="section-subtotal font-black text-slate-900 text-lg">0</span>
+                    <span class="text-[10px] font-bold text-slate-400 ml-1">FCFA</span>
+                </div>
             </div>
         </div>
     `;
@@ -200,7 +251,6 @@ function escapeHtml(str) {
     });
 }
 
-// Charger les données existantes
 function loadExistingData() {
     if (existingData && existingData.length > 0) {
         existingData.forEach((section, idx) => {
@@ -212,7 +262,6 @@ function loadExistingData() {
     }
 }
 
-// Événements
 document.getElementById("add-section").addEventListener("click", () => addSection());
 
 document.addEventListener("click", function(e) {
@@ -234,7 +283,6 @@ document.addEventListener("input", function(e) {
     }
 });
 
-// Initialisation
 loadExistingData();
 </script>
 {% endblock %}
