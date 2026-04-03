@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab
 from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
     'eau',
     'devis',
     'maintenance',
+    "django_celery_beat",
 ]
 
 SITE_ID = 1
@@ -195,3 +197,11 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True # Pour éviter les warnings Cel
 
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+
+
+CELERY_BEAT_SCHEDULE = {
+    'check-maintenance-reminders': {
+        'task': 'maintenance.tasks.check_upcoming_maintenances',
+        'schedule': crontab(hour=8, minute=0),  # Chaque jour à 8h
+    },
+}

@@ -83,7 +83,7 @@
                 <i class="fas fa-file-invoice-dollar w-6"></i>
                 <span>{% trans "Devis" %}</span>
             </a>
-            <a href="#" class="sidebar-item {% if 'maintenance' in request.path %}active{% endif %}">
+            <a href="{% url 'maintenance_list' %}" class="sidebar-item {% if 'maintenance' in request.path %}active{% endif %}">
                 <i class="fas fa-calendar-alt w-6"></i>
                 <span>{% trans "Plan Maintenance" %}</span>
             </a>

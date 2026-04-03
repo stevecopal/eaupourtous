@@ -1,0 +1,189 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification de maintenance - {{ maintenance.reference }}</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .greeting {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .info-box {
+            background: #f1f5f9;
+            border-left: 4px solid #e74c3c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-item {
+            margin-bottom: 12px;
+        }
+        .info-label {
+            font-weight: 700;
+            color: #475569;
+            display: inline-block;
+            min-width: 100px;
+        }
+        .info-value {
+            color: #1e293b;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-urgent {
+            background: #ef4444;
+        }
+        .button {
+            display: inline-block;
+            background: #1e3c72;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+        .footer {
+            background: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 12px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .info-label {
+                display: block;
+                margin-bottom: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Programme de maintenance</h1>
+            <p>Référence: {{ maintenance.reference }}</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                <strong>Bonjour {{ client.nom }},</strong>
+                <p style="margin-top: 10px;">Une intervention de maintenance a été programmée pour votre équipement.</p>
+            </div>
+            
+            <div class="info-box">
+                <div class="info-item">
+                    <span class="info-label">📅 Date :</span>
+                    <span class="info-value">{{ maintenance.date_maintenance|date:"l d F Y à H:i" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">📍 Lieu :</span>
+                    <span class="info-value">{{ maintenance.lieu }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🔧 Équipement :</span>
+                    <span class="info-value">{{ maintenance.equipement }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏷️ Type :</span>
+                    <span class="info-value">
+                        {% if maintenance.type_maintenance == 'urgente' %}
+                            <span class="status-badge status-urgent">⚠️ URGENTE</span>
+                        {% elif maintenance.type_maintenance == 'preventive' %}
+                            <span class="status-badge">🔧 Préventive</span>
+                        {% else %}
+                            <span class="status-badge">🛠️ Corrective</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <h3 style="color: #1e293b; margin-bottom: 10px;">📝 Actions à réaliser</h3>
+                <p style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 0;">
+                    {{ maintenance.actions_a_realiser|linebreaks }}
+                </p>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <h3 style="color: #1e293b; margin-bottom: 10px;">ℹ️ Informations pratiques</h3>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li>Prévoir un accès à l'équipement concerné</li>
+                    <li>Un technicien se présentera sur site à l'heure convenue</li>
+                    <li>Durée estimée: {{ maintenance.duree_estimee|default:"Non spécifiée" }}</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="{{ site_url }}{% url 'maintenance_detail' maintenance.pk %}" class="button">
+                    Voir le détail de l'intervention
+                </a>
+            </div>
+            
+            <p style="font-size: 14px; color: #64748b; margin-top: 20px;">
+                Pour toute question ou modification, veuillez nous contacter.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>{{ entreprise.nom|default:"Notre société" }}</strong></p>
+            <p>Service technique - Interventions programmées</p>
+            <p>Cet email est un message automatique, merci de ne pas y répondre.</p>
+        </div>
+    </div>
+</body>
+</html>

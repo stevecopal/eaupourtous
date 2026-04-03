@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #dc3545; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f8f9fa; }
+        .info { margin: 15px 0; padding: 10px; background: white; border-left: 4px solid #dc3545; }
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .badge-urgent { background: #dc3545; color: white; }
+        .badge-preventive { background: #007bff; color: white; }
+        .badge-corrective { background: #ffc107; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>📋 Nouvelle maintenance créée</h2>
+            <p>{{ maintenance.reference }}</p>
+        </div>
+        <div class="content">
+            <p>Bonjour l'équipe,</p>
+            <p>Une nouvelle maintenance a été programmée :</p>
+            
+            <div class="info">
+                <p><strong>📅 Date :</strong> {{ maintenance.date_maintenance|date:"l d F Y à H:i" }}</p>
+                <p><strong>👤 Client :</strong> {{ client.nom }}</p>
+                <p><strong>📍 Lieu :</strong> {{ maintenance.lieu }}</p>
+                <p><strong>🔧 Équipement :</strong> {{ maintenance.equipement }}</p>
+                <p><strong>📝 Actions :</strong> {{ maintenance.actions_a_realiser|truncatechars:100 }}</p>
+                <p><strong>🏷️ Type :</strong> 
+                    {% if maintenance.type_maintenance == 'urgente' %}
+                        <span class="badge badge-urgent">URGENTE</span>
+                    {% elif maintenance.type_maintenance == 'preventive' %}
+                        <span class="badge badge-preventive">Préventive</span>
+                    {% else %}
+                        <span class="badge badge-corrective">Corrective</span>
+                    {% endif %}
+                </p>
+            </div>
+            
+            <p><a href="{{ protocol }}://{{ domain }}{% url 'maintenance_detail' maintenance.pk %}" 
+                  style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                Voir le détail
+            </a></p>
+            
+            <p>Cordialement,<br>L'équipe technique</p>
+        </div>
+        <div class="footer">
+            <p>Cet email est un message automatique, merci de ne pas y répondre.</p>
+        </div>
+    </div>
+</body>
+</html>

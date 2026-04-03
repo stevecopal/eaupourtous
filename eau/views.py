@@ -20,6 +20,8 @@ from eau.tasks import send_contact_email_task
 from django.shortcuts import render
 from devis.models import Devis, Client
 from django.db.models import Sum
+
+from maintenance.models import Maintenance
 from .models import (
     Entreprise, Service, Realisation, Avis, 
     Valeur, Media, Document
@@ -150,6 +152,7 @@ def dashboard(request):
     context = {
         'total_devis': Devis.objects.count(),
         'total_clients': Client.objects.count(),
+        'maintenances_count': Maintenance.objects.count(),
         'derniers_devis': Devis.objects.order_by('-date_creation')[:5],
         'ca_total': Devis.objects.aggregate(Sum('total_ht'))['total_ht__sum'] or 0,
     }

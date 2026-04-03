@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #ff9800; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f8f9fa; }
+        .reminder { background: #fff3cd; border-left: 4px solid #ff9800; padding: 15px; margin: 15px 0; }
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>⚠️ RAPPEL - Maintenance demain</h2>
+            <p>{{ maintenance.reference }}</p>
+        </div>
+        <div class="content">
+            <p>Bonjour l'équipe,</p>
+            <div class="reminder">
+                <p><strong>Rappel :</strong> Une maintenance est prévue <strong>demain</strong> :</p>
+                <p><strong>📅 Date :</strong> {{ maintenance.date_maintenance|date:"l d F Y à H:i" }}</p>
+                <p><strong>👤 Client :</strong> {{ client.nom }}</p>
+                <p><strong>📍 Lieu :</strong> {{ maintenance.lieu }}</p>
+                <p><strong>🔧 Équipement :</strong> {{ maintenance.equipement }}</p>
+            </div>
+            
+            <p><a href="{{ protocol }}://{{ domain }}{% url 'maintenance_detail' maintenance.pk %}" 
+                  style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                Voir le détail
+            </a></p>
+            
+            <p>Merci de préparer l'intervention.</p>
+            <p>Cordialement,<br>L'équipe technique</p>
+        </div>
+    </div>
+</body>
+</html>

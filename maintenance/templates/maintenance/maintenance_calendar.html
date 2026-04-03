@@ -1,0 +1,114 @@
+{% extends "base_dashboard.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Planning des interventions" %}{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+<style>
+    /* Personnalisation du calendrier pour coller au design épuré */
+    :root {
+        --fc-border-color: #6f7377;
+        --fc-today-bg-color: #676e75;
+        --fc-button-bg-color: #0f348b;
+        --fc-button-border-color: #0f172a;
+        --fc-button-hover-bg-color: #a36a6a;
+        --fc-event-border-color: transparent;
+    }
+    .fc { font-family: inherit; }
+    .fc-toolbar-title { 
+        font-weight: 900 !important; 
+        text-transform: uppercase; 
+        letter-spacing: -0.025em;
+        font-size: 1.25rem !important;
+        color: #737d8d;
+    }
+    .fc-button { 
+        font-weight: 700 !important; 
+        text-transform: uppercase !important; 
+        font-size: 0.7rem !important;
+        border-radius: 0.75rem !important;
+        padding: 0.5rem 1rem !important;
+    }
+    .fc-event {
+        padding: 2px 5px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        cursor: pointer;
+        border: none !important;
+        box-shadow: 0 2px 4px rgba(175, 20, 20, 0.05);
+    }
+    .fc-daygrid-day-number { font-weight: 800; color: #292a2c; font-size: 0.8rem; }
+    .fc-col-header-cell-cushion { font-weight: 900; text-transform: uppercase; font-size: 0.7rem; color: #3c3e41; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="p-6 bg-slate-50 min-h-screen">
+    
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div>
+            <h1 class="text-2xl font-black text-slate-800 tracking-tight uppercase">
+                {% trans "Planning" %} <span class="text-blue-600">.</span>
+            </h1>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{% trans "Vue temporelle des maintenances" %}</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'maintenance_list' %}" class="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl font-bold text-sm shadow-sm hover:bg-slate-50 transition">
+                <i class="fas fa-list mr-2 text-slate-400"></i> {% trans "Vue Liste" %}
+            </a>
+            <a href="{% url 'maintenance_create' %}" class="bg-slate-900 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg hover:bg-black transition">
+                <i class="fas fa-plus mr-2 text-blue-400"></i> {% trans "Nouvelle intervention" %}
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
+        <div id="calendar"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'fr',
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'today prev,next',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek'
+        },
+        // Données dynamiques envoyées depuis Django
+        events: {{ events|safe }},
+        
+        eventClick: function(info) {
+            if (info.event.url) {
+                window.location.href = info.event.url;
+                info.jsEvent.preventDefault();
+            }
+        },
+        
+        height: 'auto',
+        firstDay: 1, // Commence le lundi
+        nowIndicator: true,
+        buttonText: {
+            today: "{% trans 'Aujourd’hui' %}",
+            month: "{% trans 'Mois' %}",
+            week: "{% trans 'Semaine' %}"
+        },
+        // Style des événements selon le type ou statut (à gérer côté Python dans la liste 'events')
+        eventDidMount: function(info) {
+            // Exemple : si c'est urgent, on peut forcer une bordure gauche
+            if (info.event.extendedProps.type === 'urgente') {
+                info.el.style.borderLeft = "4px solid #ef4444";
+            }
+        }
+    });
+    calendar.render();
+});
+</script>
+{% endblock %}
