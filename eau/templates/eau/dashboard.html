@@ -62,7 +62,7 @@
                         <tr class="hover:bg-slate-50 transition-colors">
                             <td class="p-4 font-bold text-blue-600 text-sm">#{{ devis.reference }}</td>
                             <td class="p-4 text-sm font-bold text-slate-700">{{ devis.client.nom }}</td>
-                            <td class="p-4 text-right font-black text-slate-900 text-sm tabular-nums">{{ devis.total_ht|floatformat:0 }} <span class="text-[10px]">XAF</span></td>
+                            <td class="p-4 text-right font-black text-slate-900 text-sm tabular-nums">{{ devis.total_ht|floatformat:0|intcomma }} <span class="text-[10px]">XAF</span></td>
                         </tr>
                         {% empty %}
                         <tr>
