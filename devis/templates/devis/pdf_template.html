@@ -48,47 +48,53 @@
 
         /* ========== HEADER 2 COLONNES ========== */
         .header {
+            margin-left: 60px;
             margin-bottom: 25px;
-            border-bottom: 2px solid #1e3c72;
+            border-bottom: 1px solid #476397;
             padding-bottom: 15px;
+            width: 100%;
         }
-        
+
+        /* On simule une table pour un alignement parfait en PDF */
         .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 30px;
+            display: table;
+            width: 100%;
         }
-        
+
         .header-left {
-            flex: 1;
+            display: table-cell;
+            vertical-align: middle; /* Aligne le logo au milieu verticalement du texte */
+            width: 160px; /* Largeur fixe pour le logo */
         }
-        
+
         .header-right {
-            flex: 1;
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 20px; /* Espace entre le logo et le texte */
             text-align: left;
-            font-weight: bold;
         }
-        
+
         .logo {
             max-width: 150px;
-            max-height: 80px;
-            object-fit: contain;
-        }
-        
-        .company-name {
-            font-size: 16pt;
-            font-weight: bold;
-            color: #1626b4;
-            text-transform: uppercase;
-            margin-bottom: 8px;
+            max-height: 90px;
             display: block;
         }
-        
-        .company-details {
+
+        .company-name {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #1e3c72;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .company-details p {
+            margin: 0;
             font-size: 9pt;
-            color: #4a5568;
-            line-height: 1.4;
+            line-height: 1.3;
+            color: #2c3e50;
+            font-weight: normal; /* On retire le gras partout pour plus de finesse */
         }
         
         .company-details p {
@@ -98,10 +104,7 @@
         /* ========== INFOS DEVIS ========== */
         .devis-info {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            padding: 12px 15px;
-            border-radius: 5px;
+            margin-bottom: 20px;
         }
         
         .info-item {
@@ -113,7 +116,7 @@
             font-size: 14pt;
             color: #131414;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.1px;
             font-weight: bold;
         }
         
@@ -350,16 +353,19 @@
                 {% if entreprise.logo %}
                     <img src="{% static 'logo.webp' %}" class="logo" alt="Logo">
                 {% else %}
-                    <div style="width: 120px; height: 60px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 10pt; color: #999;">Logo</div>
+                    <div style="width: 120px; height: 60px; background: #f0f0f0; border: 1px solid #ddd; display: table; text-align: center;">
+                        <span style="display: table-cell; vertical-align: middle; font-size: 8pt; color: #999;">LOGO</span>
+                    </div>
                 {% endif %}
             </div>
+
             <div class="header-right">
                 <span class="company-name">{{ entreprise.nom }}</span>
                 <div class="company-details">
-                    <p>LOCALISATION : {{ entreprise.adresse|default:"Adresse non renseignée" }}</p>
-                    <p>Tél : {{ entreprise.telephone|default:"N/A" }} | Email : {{ entreprise.email|default:"N/A" }}</p>
-                    <p>NIU : {{ entreprise.niu|default:"M022118476119T" }} | RCCM : {{ entreprise.rccm|default:"RC/DLN/2021/B/443" }}</p>
-                    <p> SITE WEB : {{ entreprise.site_web|default:"N/A"}}
+                    <p><strong>LOCALISATION :</strong> {{ entreprise.adresse|default:"Adresse non renseignée" }}</p>
+                    <p><strong>Tél :</strong> {{ entreprise.telephone|default:"N/A" }} | <strong>Email :</strong> {{ entreprise.email|default:"N/A" }}</p>
+                    <p><strong>NIU :</strong> {{ entreprise.niu|default:"M022118476119T" }} | <strong>RCCM :</strong> {{ entreprise.rccm|default:"RC/DLN/2021/B/443" }}</p>
+                    <p><strong>SITE WEB :</strong> {{ entreprise.site_web|default:"N/A" }}</p>
                 </div>
             </div>
         </div>
@@ -372,17 +378,10 @@
     <div class="devis-info">
         
         <div class="info-item">
-            <div class="info-label" style="font-size: 12pt;">N° DE DEVIS</div>
-            <div class="info-value">{{ devis.reference }}</div>
+            <div class="info-label" style="font-size: 12pt;">DEVIS N°{{ devis.reference }}</div>
         </div>
-        {% comment %} <div class="info-item">
-            <div class="info-label">DATE D'ÉMISSION</div>
-            <div class="info-value">{{ devis.date_creation|date:"d/m/Y" }}</div>
-        </div> {% endcomment %}
-        <div class="info-item">
-            <div class="info-label" style="font-size: 12pt;">DATE DE VALIDITÉ</div>
-            <div class="info-value">{{ devis.date_validite|default:devis.date_creation|date:"d/m/Y" }}</div>
-        </div>
+       
+        
     </div>
 
     <!-- CLIENT INFO -->
@@ -440,10 +439,7 @@
     <div class="amount-in-words">
         Arrêté le présent devis à la somme de : <span style="text-transform: uppercase;">{{ total_lettres }} Francs CFA</span>
     </div>
-    <div style="margin-top: 10px; font-size: 11pt; color: #131414; font-style: italic; font-weight: bold;">
-        fait à {{ entreprise.ville|default:"douala" }}, le {{ devis.date_creation|date:"d/m/Y" }}
-    </div>
-
+   
 
     <!-- SIGNATURE 2 COLONNES -->
     <div class="signature-section">
@@ -466,17 +462,16 @@
         </div>
     </div>
 
+     <div style="margin-top: 13px; font-size: 11pt; color: #131414; font-style: italic; font-weight: bold; text-align: right;">
+        
+        fait à {{ entreprise.ville|default:"douala" }}, le {{ devis.date_creation|date:"d/m/Y" }}
+    </div>
+
+
     <!-- FOOTER -->
     <div class="footer">
         <div class="footer-info">
-            <span>RCCM : {{ entreprise.rccm|default:"RC/DLN/2021/B/443" }}</span>
-            <span>NIU : {{ entreprise.niu|default:"M022118476119T" }}</span>
-            {% if entreprise.iban %}
-            <span>IBAN : {{ entreprise.iban }}</span>
-            {% endif %}
-            {% if entreprise.bic %}
-            <span>BIC : {{ entreprise.bic }}</span>
-            {% endif %}
+           
         </div>
         <div style="margin-top: 10px;">
             {{ entreprise.adresse|default:"Adresse non renseignée" }} | Tél : {{ entreprise.telephone|default:"N/A" }} | Email : {{ entreprise.email|default:"N/A" }}<br>
