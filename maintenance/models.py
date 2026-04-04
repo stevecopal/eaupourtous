@@ -117,15 +117,15 @@ class Maintenance(models.Model):
         }
         html_client = render_to_string('emails/notification_client.html', contexte_client)
         texte_client = strip_tags(html_client)
-        
-        send_mail(
-            sujet_client,
-            texte_client,
-            settings.DEFAULT_FROM_EMAIL,
-            [self.client.email],
-            html_message=html_client,
-            fail_silently=False,
-        )
+        if self.client.email:
+            send_mail(
+                sujet_client,
+                texte_client,
+                settings.DEFAULT_FROM_EMAIL,
+                [self.client.email],
+                html_message=html_client,
+                fail_silently=False,
+            )
         
         # Notification à l'admin
         sujet_admin = f"[MAINTENANCE] Nouvelle maintenance créée - {self.reference}"

@@ -6,7 +6,7 @@ from django.utils import timezone
 
 class Client(models.Model):
     nom = models.CharField(_("Nom complet"), max_length=255)
-    email = models.EmailField(_("Adresse email"), unique=True)
+    email = models.EmailField(_("Adresse email"), unique=True , null=True, blank=True)
     telephone = models.CharField(_("Téléphone"), max_length=20)
     adresse = models.TextField(_("Adresse"), blank=True)
     date_creation = models.DateTimeField(_("Date de création"), auto_now_add=True)
