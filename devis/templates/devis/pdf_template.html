@@ -8,7 +8,7 @@
     <style>
         @page {
             size: A4;
-            margin: 1,5cm;
+            margin: 1.5cm;
             @bottom-center {
                 content: "Page " counter(page) " / " counter(pages);
                 font-size: 8pt;
@@ -48,9 +48,8 @@
 
         /* ========== HEADER 2 COLONNES ========== */
         .header {
-            margin-left: 60px;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #476397;
+            margin-left: 140px;
+            margin-bottom: 35px;
             padding-bottom: 15px;
             width: 100%;
         }
@@ -72,6 +71,7 @@
             vertical-align: middle;
             padding-left: 20px; /* Espace entre le logo et le texte */
             text-align: left;
+            margin-left: 60px;
         }
 
         .logo {
@@ -81,9 +81,9 @@
         }
 
         .company-name {
-            font-size: 14pt;
+            font-size: 15pt;
             font-weight: bold;
-            color: #1e3c72;
+            color: #0c0a8b;
             text-transform: uppercase;
             margin-bottom: 4px;
             display: block;
@@ -114,8 +114,7 @@
         
         .info-label {
             font-size: 14pt;
-            color: #131414;
-            text-transform: uppercase;
+            color: #2d2e2e;
             letter-spacing: 0.1px;
             font-weight: bold;
         }
@@ -373,14 +372,19 @@
 
     <!-- INFOS DEVIS -->
      <div class="info-item">
-        <div class="info-label">OBJET : {{ devis.objet }}</div>
+        <div class="info-label " style="font-size: 15pt; text-transform: uppercase;">OBJET : {{ devis.objet }}</div>
     </div><br>
     <div class="devis-info">
         
         <div class="info-item">
-            <div class="info-label" style="font-size: 12pt;">DEVIS N°{{ devis.reference }}</div>
+            <div class="info-label" style="font-size: 10pt;">DEVIS N° : {{ devis.reference }}</div>
         </div>
-       
+       <div class="info-item">
+            <div class="info-label" style="font-size: 9pt; text-transform: normal;">DATE D'EMISSION : {{ devis.date_creation}}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label" style="font-size: 9pt;">DATE VALIDITE : {{ devis.date_validite }}</div>
+        </div>
         
     </div>
 
