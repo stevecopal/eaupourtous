@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -117,3 +119,44 @@ class LigneDevis(models.Model):
 
 
 
+def rapport_upload_path(instance, filename):
+    # Organise les fichiers par client dans le dossier media
+    return f'rapports/client_{instance.client.id}/{filename}'
+
+class Rapport(models.Model):
+    nom = models.CharField(_("Nom du rapport"), max_length=255)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='rapports')
+    fichier = models.FileField(_("Document (PDF/Word)"), upload_to=rapport_upload_path)
+    date_creation = models.DateTimeField(_("Date de création"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Rapport")
+        verbose_name_plural = _("Rapports")
+        ordering = ['-date_creation']
+
+    def __str__(self):
+        return f"{self.nom} - {self.client.nom}"
+
+    @property
+    def extension(self):
+        name, extension = os.path.splitext(self.fichier.name)
+        return extension.lower()
+    
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+@receiver(pre_save, sender=Rapport)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """Supprime l'ancien fichier du disque quand on en télécharge un nouveau"""
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = sender.objects.get(pk=instance.pk).fichier
+    except sender.DoesNotExist:
+        return False
+
+    new_file = instance.fichier
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)

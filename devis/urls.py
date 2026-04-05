@@ -18,4 +18,13 @@ urlpatterns = [
     path('clients/creer/', views.client_create, name='client_create'),
     path('clients/<int:pk>/modifier/', views.client_edit, name='client_edit'),
     path('clients/<int:pk>/supprimer/', views.client_delete, name='client_delete'),
+
+
+    path('rapports/tous/', views.liste_tous_les_rapports, name='liste_tous_les_rapports'),
+    path('client/<int:client_id>/rapports/', views.liste_rapports_client, name='liste_rapports_client'),
+    path('client/<int:client_id>/rapports/ajouter/', views.ajouter_rapport, name='ajouter_rapport_client'),
+    path('rapports/ajouter/', views.ajouter_rapport, name='ajouter_rapport_general'),
+    path('rapports/<int:rapport_id>/supprimer/', views.supprimer_rapport, name='supprimer_rapport'),
+    path('rapports/<int:rapport_id>/modifier/', views.modifier_rapport, name='modifier_rapport'),
+
 ]

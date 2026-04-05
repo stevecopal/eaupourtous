@@ -8,6 +8,9 @@ from weasyprint import HTML
 from django.utils.translation import gettext as _
 from django.forms import inlineformset_factory
 
+from .models import Client, Rapport
+from .forms import RapportForm
+
 import devis
 import maintenance
 from maintenance.models import Maintenance
@@ -389,3 +392,102 @@ def client_delete(request, pk):
         messages.warning(request, "Le client a été supprimé.")
         return redirect('client_list')
     return render(request, 'clients/client_confirm_delete.html', {'client': client})
+
+
+
+
+def liste_tous_les_rapports(request):
+    """Vue pour la section 'Rapports' de la sidebar (vue globale)"""
+    query = request.GET.get('q')
+    rapports = Rapport.objects.select_related('client').all()
+
+    # Optionnel : Ajouter une barre de recherche par nom de rapport ou nom de client
+    if query:
+        rapports = rapports.filter(
+            Q(nom__icontains=query) | 
+            Q(client__nom__icontains=query)
+        )
+
+    return render(request, 'rapports/liste_rapports.html', {
+        'rapports': rapports,
+        'query': query
+    })
+
+
+
+def liste_rapports_client(request, client_id):
+    """Affiche tous les rapports d'un client spécifique"""
+    client = get_object_or_404(Client, id=client_id)
+    rapports = client.rapports.all()
+    return render(request, 'clients/client_detail.html', {
+        'client': client,
+        'rapports': rapports
+    })
+
+def ajouter_rapport(request, client_id=None):
+    """Ajoute un rapport (lié à un client si client_id est fourni)"""
+    client = None
+    if client_id:
+        client = get_object_or_404(Client, id=client_id)
+    
+    if request.method == 'POST':
+        form = RapportForm(request.POST, request.FILES)
+        if form.is_valid():
+            rapport = form.save()
+            messages.success(request, f"Le rapport '{rapport.nom}' a été ajouté avec succès.")
+            return redirect('client_detail', pk=rapport.client.pk)
+    else:
+        # Si on arrive depuis la fiche client, on pré-sélectionne le client
+        initial_data = {'client': client} if client else {}
+        form = RapportForm(initial=initial_data)
+    
+    return render(request, 'rapports/formulaire.html', {
+        'form': form,
+        'client': client
+    })
+
+def supprimer_rapport(request, rapport_id):
+    rapport = get_object_or_404(Rapport, id=rapport_id)
+    client_pk = rapport.client.pk  # On garde le PK du client
+    
+    if request.method == 'POST':
+        # Récupérer l'URL de la page précédente
+        referer = request.META.get('HTTP_REFERER', '')
+        
+        # Suppression
+        if rapport.fichier:
+            rapport.fichier.delete()
+        rapport.delete()
+        
+        messages.success(request, "Rapport supprimé avec succès.")
+
+        # CONDITION DE REDIRECTION
+        # Si l'URL de provenance contient 'clients/', on retourne à la fiche client
+        if 'clients/' in referer:
+            return redirect('client_detail', pk=rapport.client.pk)
+        
+        # Sinon, on retourne à la liste générale des rapports
+        return redirect('liste_tous_les_rapports')
+
+    return redirect('liste_tous_les_rapports')
+def modifier_rapport(request, rapport_id):
+    """Modifie un rapport existant"""
+    rapport = get_object_or_404(Rapport, id=rapport_id)
+    client = rapport.client # Pour garder le contexte du client
+    
+    if request.method == 'POST':
+        # On passe l'instance pour mettre à jour l'objet existant au lieu d'en créer un nouveau
+        form = RapportForm(request.POST, request.FILES, instance=rapport)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Le rapport '{rapport.nom}' a été mis à jour.")
+            return redirect('client_detail', pk=rapport.client.pk)
+    else:
+        form = RapportForm(instance=rapport)
+    
+    return render(request, 'rapports/formulaire.html', {
+        'form': form,
+        'rapport': rapport,
+        'client': client,
+        'en_edition': True # Petit flag pour changer le titre dans le HTML
+    })

@@ -73,7 +73,9 @@
                                         {{ client.nom|slice:":1"|upper }}
                                     </div>
                                     <div>
-                                        <p class="font-black text-slate-800 text-sm uppercase tracking-tight">{{ client.nom }}</p>
+                                        <a href="{% url 'client_detail' client.pk %}" class="font-bold  text-blue-600 hover:text-blue-600">
+                                            {{ client.nom }}
+                                        </a>
                                         <p class="text-[11px] text-slate-400 font-bold italic">{{ client.email|default:"Pas d'email" }}</p>
                                     </div>
                                 </div>

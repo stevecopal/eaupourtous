@@ -56,7 +56,9 @@
                 {% for m in maintenances %}
                 <tr class="hover:bg-slate-50/50 transition-colors">
                     <td class="px-6 py-4">
-                        <p class="font-black text-slate-800 text-sm uppercase">{{ m.client.nom }}</p>
+                        <a href="{% url 'client_detail' m.client.pk %}" class="font-bold  text-blue-600 hover:text-blue-600">
+                            {{ m.client.nom }}
+                        </a>
                         <p class="text-[10px] font-mono text-slate-400">#{{ m.reference }}</p>
                     </td>
                     <td class="px-6 py-4">

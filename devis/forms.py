@@ -1,7 +1,11 @@
+import os
+
 from django import forms
 from django.forms import inlineformset_factory
 from .models import Devis, SectionDevis, LigneDevis
 from django.utils.translation import gettext_lazy as _
+from django import forms
+from .models import Rapport
 
 class DevisForm(forms.ModelForm):
     class Meta:
@@ -57,3 +61,31 @@ class ClientForm(forms.ModelForm):
             'telephone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Numéro de téléphone'}),
             'adresse': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Adresse physique'}),
         }
+
+
+
+
+class RapportForm(forms.ModelForm):
+    class Meta:
+        model = Rapport
+        fields = ['client', 'nom', 'fichier']
+        widgets = {
+            'client': forms.Select(attrs={
+                'class': 'form-control w-full pl-10 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-11',
+            }),
+            'nom': forms.TextInput(attrs={
+                'class': 'form-control w-full pl-10 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500 h-11',
+                'placeholder': 'Ex: Rapport d\'analyse forage PK12'
+            }),
+            'fichier': forms.FileInput(attrs={
+                'class': 'block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-1',
+            }),
+        }
+
+    def clean_fichier(self):
+        file = self.cleaned_data.get('fichier')
+        if file:
+            extension = os.path.splitext(file.name)[1].lower()
+            if extension not in ['.pdf', '.doc', '.docx']:
+                raise forms.ValidationError("Seuls les fichiers PDF et Word sont autorisés.")
+        return file

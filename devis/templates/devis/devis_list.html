@@ -63,8 +63,10 @@
                                 {{ d.reference }}
                             </span>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="font-bold text-slate-700">{{ d.client.nom }}</div>
+                        <td class="px-6 py-4 ">
+                            <a href="{% url 'client_detail' d.client.pk %}" class="font-bold  text-blue-600 hover:text-blue-600">
+                                {{ d.client.nom }}
+                            </a>
                             <div class="text-[10px] text-slate-400 font-medium italic">{{ d.date_creation|date:"d M Y" }}</div>
                         </td>
                         <td class="px-6 py-4">

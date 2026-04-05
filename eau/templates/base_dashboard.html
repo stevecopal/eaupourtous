@@ -132,18 +132,23 @@
                 <i class="fas fa-grid-2 w-6 text-center"></i>
                 <span>{% trans "Tableau de bord" %}</span>
             </a>
-            <a href="{% url 'devis_list' %}" class="sidebar-item {% if 'devis' in request.path %}active{% endif %}">
+            <a href="{% url 'devis_list' %}" class="sidebar-item {% if request.resolver_match.url_name == 'devis_list' %}active{% endif %}">
                 <i class="fas fa-file-invoice-dollar w-6 text-center"></i>
                 <span>{% trans "Gestion Devis" %}</span>
             </a>
-            <a href="{% url 'maintenance_calendar' %}" class="sidebar-item {% if 'maintenance' in request.path %}active{% endif %}">
+            <a href="{% url 'maintenance_calendar' %}" class="sidebar-item {% if request.resolver_match.url_name == 'maintenance_calendar' %}active{% endif %}">
                 <i class="fas fa-faucet-drip w-6 text-center"></i>
                 <span>{% trans "Plan Maintenance" %}</span>
             </a>
-            <a href="{% url 'client_list' %}" class="sidebar-item {% if 'client' in request.path %}active{% endif %}">
+            <a href="{% url 'client_list' %}" class="sidebar-item {% if request.resolver_match.url_name == 'client_list' %}active{% endif %}">
                 <i class="fas fa-address-book w-6 text-center"></i>
                 <span>{% trans "Répertoire Clients" %}</span>
             </a>
+            <a href="{% url 'liste_tous_les_rapports' %}" class="sidebar-item {% if request.resolver_match.url_name == 'liste_tous_les_rapports' %}active{% endif %}">
+                <i class="fas fa-file-alt w-6 text-center"></i> 
+                <span>{% trans "Gestion Rapports" %}</span>
+            </a>
+
         </nav>
 
         <div class="p-6">

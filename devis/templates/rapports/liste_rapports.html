@@ -1,0 +1,67 @@
+{% extends 'base_dashboard.html' %}
+
+{% block content %}
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-slate-800">Gestion des Rapports Client</h1>
+        <a href="{% url 'ajouter_rapport_general' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+            + Nouveau Rapport
+        </a>
+    </div>
+
+    <div class="mb-6">
+        <form method="get" class="flex max-w-md">
+            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Chercher un rapport ou un client..." 
+                   class="form-control rounded-l-lg border-gray-300 w-full">
+            <button type="submit" class="bg-slate-100 border border-l-0 border-gray-300 px-4 rounded-r-lg hover:bg-gray-200">
+                🔍
+            </button>
+        </form>
+    </div>
+
+    <div class="bg-white shadow rounded-xl overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-slate-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Document</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Client</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for rapport in rapports %}
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">
+                                {% if '.pdf' in rapport.fichier.name %} 📕 {% else %} 📘 {% endif %}
+                            </span>
+                            <span class="font-medium text-slate-700">{{ rapport.nom }}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-blue-600 font-semibold">
+                        <a href="{% url 'client_detail' rapport.client.id %}">{{ rapport.client.nom }}</a>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-slate-500">
+                        {{ rapport.date_creation|date:"d M Y" }}
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        <a href="{{ rapport.fichier.url }}" target="_blank" class="text-slate-400 hover:text-blue-600">👁️</a>
+                        <a href="{% url 'modifier_rapport' rapport.id %}" class="text-slate-400 hover:text-yellow-600">✏️</a>
+                        <form action="{% url 'supprimer_rapport' rapport.id %}" method="POST" class="inline" onsubmit="return confirm('Supprimer ce rapport ?');">
+                            {% csrf_token %}
+                            <button type="submit" class="text-slate-400 hover:text-red-600">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="px-6 py-10 text-center text-slate-400">Aucun rapport trouvé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
